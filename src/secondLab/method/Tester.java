@@ -23,6 +23,11 @@ public class Tester {
     public static final double[][] matrix2 = new double[][]{{2, -1},{-1, 1}};
     public static final double[] bVector2 = new double[]{0, 0};
 
+    public static final Function<double[], Double> func4 = a -> 64 * a[0] * a[0] + 126 * a[0] * a[1] + 64 * a[1] * a[1] - 10 * a[0] + 30 * a[1] + 13;
+    public static final String func4String = "64*x*x + 126*x*y + 64*y*y - 10*x + 30*y + 13";
+    public static final Map<Integer, Function<double[], Double>> derivative4 = Map.of(0, x -> 128 * x[0] + 126 * x[1] - 10, 1, x -> 126 * x[0] + 128 * x[1] + 30);
+    public static final double[][] matrix4 = new double[][]{{128, 126},{126, 128}};
+    public static final double[] bVector4 = new double[]{-10, 30};
 
 
 
