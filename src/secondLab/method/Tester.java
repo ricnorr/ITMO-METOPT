@@ -23,11 +23,26 @@ public class Tester {
     public static final double[][] matrix2 = new double[][]{{2, -1},{-1, 1}};
     public static final double[] bVector2 = new double[]{0, 0};
 
-    public static final Function<double[], Double> func4 = a -> 64 * a[0] * a[0] + 126 * a[0] * a[1] + 64 * a[1] * a[1] - 10 * a[0] + 30 * a[1] + 13;
-    public static final String func4String = "64*x*x + 126*x*y + 64*y*y - 10*x + 30*y + 13";
-    public static final Map<Integer, Function<double[], Double>> derivative4 = Map.of(0, x -> 128 * x[0] + 126 * x[1] - 10, 1, x -> 126 * x[0] + 128 * x[1] + 30);
+    // Начальная точка 1 5
+    public static final Function<double[], Double> func4 = a -> 64 * a[0] * a[0] + 126 * a[0] * a[1] + 64 * a[1] * a[1] + 10 * a[0] + 10 * a[1] - 187;
+    public static final String func4String = "64*x*x + 126*x*y + 64*y*y + 10*x + 10*y - 187";
+    public static final Map<Integer, Function<double[], Double>> derivative4 = Map.of(0, x -> 128 * x[0] + 126 * x[1] + 10, 1, x -> 126 * x[0] + 128 * x[1] + 10);
     public static final double[][] matrix4 = new double[][]{{128, 126},{126, 128}};
-    public static final double[] bVector4 = new double[]{-10, 30};
+    public static final double[] bVector4 = new double[]{10, 10};
+
+    // Начальная точка4 5
+    public static final Function<double[], Double> func5 = a -> 13 * a[0] * a[0] - 37 * a[0] * a[1] + 70 * a[1] * a[1] + 13 * a[1] - 56;
+    public static final String func5String = "13*x*x - 37*x*y + 70*y*y + 13*y - 56";
+    public static final Map<Integer, Function<double[], Double>> derivative5 = Map.of(0, x -> 26 * x[0] - 37 * x[1], 1, x -> -37 * x[0] + 140 * x[1] + 13);
+    public static final double[][] matrix5 = new double[][]{{26, -37},{-37, 140}};
+    public static final double[] bVector5 = new double[]{0, 13};
+
+    // Начальная точка -1 2
+    public static final Function<double[], Double> func6 = a -> 5 * a[0] * a[0] - 12 * a[0] * a[1] + 11 * a[1] * a[1] + 6 * a[0] - 13 * a[1] - 131;
+    public static final String func6String = "5*x*x - 12*x*y + 11*y*y + 6*x - 13*y - 131";
+    public static final Map<Integer, Function<double[], Double>> derivative6 = Map.of(0, x -> 10 * x[0] - 12 * x[1] + 6, 1, x -> -12 * x[0] + 22 * x[1] - 13);
+    public static final double[][] matrix6 = new double[][]{{10, -12},{-12, 22}};
+    public static final double[] bVector6 = new double[]{6, -13};
 
 
 
