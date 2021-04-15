@@ -7,6 +7,11 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static java.lang.Math.min;
+
+/**
+ * For point3 in report
+ */
 public class Point3 {
     public static void main(String[] args) {
 
@@ -18,42 +23,40 @@ public class Point3 {
                 double[] point = new double[x];
                 for (int i = 0; i < x - 1; i++) {
                     int finalI = i;
-                    derivative.put(i, arg -> arg[finalI] * 2);
+                    int mn = min(y, i + 1);
+                    derivative.put(i, arg -> mn * arg[finalI] * 2);
                     point[i] = 3;
                 }
                 // For conjugate method, imitate matrix.
                 // Matrix format will depend on condition number ("число обусловленности")
                 // For example 3 x 3 matrix, with cond. number 5, will be:
                 /// 1 0 0
-                /// 0 1 0
-                /// 0 1 3
-                /// Not hard to notice that, condition number is indeed 3
+                /// 0 2 0
+                /// 0 0 5
+                /// Not hard to notice that, condition number is indeed 5
                 BiFunction<Integer, Integer, Double> biFunction = (a, b) -> {
-                    if (a.equals(b) && b == x - 1) {
-                        return 2 * (double) y;
-                    } else if (a.equals(b)) {
-                        return 2 * 1.0;
-                    } else {
+                    if (!a.equals(b)) {
                         return 0.0;
+                    }
+                    int min = min(y - 1, a);
+                    if (b == x - 1) {
+                        return 2 * (double) y;
+                    } else {
+                        return (double) (2 * (min + 1));
                     }
                 };
                 derivative.put(x - 1, arg -> arg[x - 1] * y * 2);
                 point[x - 1] = 3;
-                //System.out.println("Test dimensions: " + x);
-                //System.out.println("Test number: " + y);
-                /* double[] ans = new QuickestDescentMethod().run(a -> {
+                double[] ans = new DescentGradientMethod().run(a -> {
                     double result = 0;
                     for (int i = 0; i < a.length - 1; i++) {
-                        result += a[i] * a[i];
+                        result += min(i + 1, y) * a[i] * a[i];
                     }
                     result += a[a.length - 1] * a[a.length - 1] * y;
                     return result;
-                }, derivative, point, 0.0001);*/
+                }, derivative, point, 0.0001);
                 System.out.print("& ");
-                 double[] ans = new ConjugateGradientMethod().runImpl(biFunction, new double[point.length], point, 0.0001);
-                 /*for (double d : ans) {
-                     System.out.print(d + " ");
-                 }*/
+                ans = new ConjugateGradientMethod().runImpl(biFunction, new double[point.length], point, 0.0001);
             }
             System.out.println();
         }

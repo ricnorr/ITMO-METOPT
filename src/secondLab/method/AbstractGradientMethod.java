@@ -18,7 +18,6 @@ import static java.lang.Math.sqrt;
 
 public abstract class AbstractGradientMethod implements GradientMethod {
 
-    protected static int MAX_ITERATIONS = 1023;
     protected Map<Integer, Function<double[], Double>> derivative;
 
     protected double[] subtract(double[] firstVector, double[] secondVector) {

@@ -73,14 +73,14 @@ public class Tester {
             System.out.print(y + " ");
         }
     }
-
     public static void main(String[] args) {
         /*Function<double[], Double> func = a -> 10 * a[0] * a[0] + a[1] * a[1];
         Map<Integer, Function<double[], Double>> derivative = Map.of(0, x -> 20 * x[0],1, x -> 2 * x[1]);
         testFunction(func, derivative);
         testFunction(func1, derivative1);
-        testFunction(func3, derivative3);
-        double[] res = new ConjugateGradientMethod().runImpl(matrix1, bVector1, new double[]{10, 12}, 0.0001);
+        testFunction(func3, derivative3);*/
+        //double[] res = new ConjugateGradientMethod().runImpl(matrix1, bVector1, new double[]{10, 12}, 0.0001);
+        double[] res = new QuickestDescentMethod().run(func4, derivative4, new double[]{3,3},0.0001);
         for (int i = 0; i < res.length; i++) {
             System.out.println(res[i]);
         } */

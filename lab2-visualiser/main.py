@@ -19,7 +19,7 @@ for line in file:
     ax.arrow(x, y,
              dx, dy,
              length_includes_head=True,
-             head_width=0.02, head_length=0.01)
+             head_width=0.3, head_length=0.3)
 contourLevels.sort()
 xlist = np.linspace(-int(sys.argv[3]), int(sys.argv[3]), 100)
 ylist = np.linspace(-int(sys.argv[3]), int(sys.argv[3]), 100)
