@@ -64,19 +64,20 @@ public class ConjugateGradientMethod extends AbstractGradientMethod {
         while (steps++ < Long.MAX_VALUE) {
             double[] Apk = multMatrixVector(a, pk);
             double alphaK = Math.pow(length(gradient), 2) / scalarMult(Apk, pk);
+            double[] t = multiplyValue(alphaK, pk);
             double[] gradientNext = sum(gradient, multiplyValue(alphaK, Apk));
-            xk = sum(xk, multiplyValue(alphaK, pk));
+            xk = sum(xk, t);
             double betaK = Math.pow(length(gradientNext), 2) / Math.pow(length(gradient), 2);
             pk = sum(negate(gradientNext), multiplyValue(betaK, pk));
+            pointsForOutput.add(t[0]);
+            pointsForOutput.add(t[1]);
             if (length(gradientNext) < epsilon) {
                 break;
             }
-            pointsForOutput.add(gradientNext[0]);
-            pointsForOutput.add(gradientNext[1]);
             gradient = gradientNext;
         }
         writeInFile("CGM.out", pointsForOutput);
-        System.out.print(steps + " ");
+        System.out.print(steps + "\n ");
         return xk;
     }
 
@@ -92,9 +93,11 @@ public class ConjugateGradientMethod extends AbstractGradientMethod {
             double[] Apk = multMatrixVector(matrix, pk);
             double alphaK = Math.pow(length(gradient), 2) / scalarMult(Apk, pk);
             double[] gradientNext = sum(gradient, multiplyValue(alphaK, Apk));
+
             xk = sum(xk, multiplyValue(alphaK, pk));
             double betaK = Math.pow(length(gradientNext), 2) / Math.pow(length(gradient), 2);
             pk = sum(negate(gradientNext), multiplyValue(betaK, pk));
+
             if (length(gradientNext) < epsilon) {
                 break;
             }
@@ -102,7 +105,7 @@ public class ConjugateGradientMethod extends AbstractGradientMethod {
             pointsForOutput.add(gradientNext[1]);
             gradient = gradientNext;
         }
-        System.out.print(iterations + " ");
+        System.out.print(iterations + "\n");
         //writeInFile("CGM.out", pointsForOutput);
         return xk;
     }

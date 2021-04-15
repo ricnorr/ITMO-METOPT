@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class Tester {
-    private static final double EPSILON = 0.0000001;
-    private static double[] test(GradientMethod method, Function<double[], Double> function, Map<Integer, Function<double[], Double>> derivative) {
-        return method.run(function, derivative, new double[]{1, 1}, EPSILON);
+    private static final double EPSILON = 0.00000001;
+    private static double[] test(GradientMethod method, Function<double[], Double> function, Map<Integer, Function<double[], Double>> derivative, double[] point) {
+        return method.run(function, derivative, point, EPSILON);
     }
 
     public static final Function<double[], Double> func1 = a -> 1.5 * (a[0] - a[1]) * (a[0] - a[1]) + 1.0 / 3 * (a[0] + a[1]) * (a[0] + a[1]);
@@ -52,22 +52,25 @@ public class Tester {
             1, x -> 2 * x[1] * Math.exp(-10 * x[0] * x[0] - x[1] * x[1]));
     public static final String func3String = "1-2.7^(-1*(10*x^2+y^2))";
 
-    private static void testFunction(Function<double[], Double> function, Map<Integer, Function<double[], Double>> derivative) {
+    private static void testFunction(Function<double[], Double> function, Map<Integer, Function<double[], Double>> derivative, double[][] matrix, double[] bVector, double[] point) {
         List<GradientMethod> methods = new ArrayList<>();
         methods.add(new DescentGradientMethod());
         methods.add(new QuickestDescentMethod());
-        //матрица - коэффициенты производных при x1, x2
-        methods.add(new ConjugateGradientMethod());
-        double[][] res = new double[methods.size()][];
-        for (int i = 0; i < res.length; i++) {
-            res[i] = test(methods.get(i), function, derivative);
+        double[][] res = new double[methods.size() + 1][];
+        for (int i = 0; i < methods.size(); i++) {
+            res[i] = test(methods.get(i), function, derivative, point);
         }
-        for (int i = 0; i < res.length; i++) {
+        res[2] = new ConjugateGradientMethod().runImpl(matrix, bVector, point, EPSILON);
+        for (int i = 0; i < res.length - 1; i++) {
             System.out.print(methods.get(i).getClass().getSimpleName() + ": ");
             for (double y : res[i]) {
                 System.out.print(y + " ");
             }
             System.out.println();
+        }
+        System.out.println("Conjugate gradient");
+        for (double y : res[2]) {
+            System.out.print(y + " ");
         }
     }
 
@@ -76,10 +79,11 @@ public class Tester {
         Map<Integer, Function<double[], Double>> derivative = Map.of(0, x -> 20 * x[0],1, x -> 2 * x[1]);
         testFunction(func, derivative);
         testFunction(func1, derivative1);
-        testFunction(func3, derivative3);*/
+        testFunction(func3, derivative3);
         double[] res = new ConjugateGradientMethod().runImpl(matrix1, bVector1, new double[]{10, 12}, 0.0001);
         for (int i = 0; i < res.length; i++) {
             System.out.println(res[i]);
-        }
+        } */
+        testFunction(func4, derivative4, matrix4, bVector4, new double[]{1, 5});
     }
 }

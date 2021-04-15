@@ -25,7 +25,7 @@ public class QuickestDescentMethod extends AbstractGradientMethod {
             listForOutput.add(-multiplyValue(lambda, gradient)[1]); // visualization
         } while (iterations < Long.MAX_VALUE && abs(nextPoint, point) >= epsilon);
         writeInFile("QDM.out", listForOutput);
-        System.out.print(iterations + " ");
+        System.out.print(iterations + " \n");
         return point;
     }
 }
