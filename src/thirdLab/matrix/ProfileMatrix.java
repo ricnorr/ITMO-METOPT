@@ -1,8 +1,12 @@
 package thirdLab.matrix;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
@@ -17,7 +21,24 @@ public class ProfileMatrix implements Matrix {
     private double[] di;      // хранит диагонльные элементы
     private int[] ia;      //ia[i + 1] - ia[i] - кол-во внедиагоныльных эл-ов, на i-ой строчке
     private int n; //размерность
-    private int inLu;
+
+
+    public ProfileMatrix(String filename) {
+        Path path = Path.of(filename);
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
+            al = Arrays.stream(reader.readLine().split("\\s+")).filter(x -> !x.isEmpty()).mapToDouble(Double::valueOf).toArray();
+            au = Arrays.stream(reader.readLine().split("\\s+")).filter(x -> !x.isEmpty()).mapToDouble(Double::valueOf).toArray();
+            di = Arrays.stream(reader.readLine().split("\\s+")).filter(x -> !x.isEmpty()).mapToDouble(Double::valueOf).toArray();
+            ia = Arrays.stream(reader.readLine().split("\\s+")).filter(x -> !x.isEmpty()).mapToInt(Integer::valueOf).toArray();
+        } catch (IOException e) {
+            System.err.println("IO failed");
+        } catch (NumberFormatException debug) {
+            System.err.println("Debug");
+        }
+    }
+
+
+
 
     public ProfileMatrix(double[][] matrix) {
         assert (matrix.length == matrix[0].length);
@@ -44,6 +65,18 @@ public class ProfileMatrix implements Matrix {
         }
         for (int i = 0; i < auList.size(); i++) {
             au[i] = auList.get(i);
+        }
+    }
+
+
+    public void writeInFile(String filename) {
+        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(filename))) {
+            writer.write(Arrays.stream(al).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n")));
+            writer.write(Arrays.stream(au).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n")));
+            writer.write(Arrays.stream(di).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n")));
+            writer.write(Arrays.stream(ia).mapToObj(Integer::toString).collect(Collectors.joining(" ", "", "\n")));
+        } catch (IOException e) {
+
         }
     }
 
@@ -106,9 +139,11 @@ public class ProfileMatrix implements Matrix {
                 matrixes[i][j][j] = random.nextDouble();
             }
             ProfileMatrix a = new ProfileMatrix(matrixes[i]);
+            a.writeInFile("matr/test.txt");
+            ProfileMatrix b = new ProfileMatrix("matr/test.txt");
             for (int j = 0; j < n; j++) {
                 for (int k = 0; k < n; k++) {
-                    if (matrixes[i][j][k] != a.getElement(j, k)) {
+                    if (matrixes[i][j][k] != a.getElement(j, k) || matrixes[i][j][k] != b.getElement(j, k)) {
                         System.out.println("FAILED");
                     }
                 }
