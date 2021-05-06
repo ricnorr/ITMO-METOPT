@@ -1,5 +1,7 @@
 package thirdLab.matrix;
 
+import thirdLab.MatrixUtilities;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -68,13 +70,13 @@ public class ProfileMatrix implements Matrix {
 
 
     public void writeInFile(String filename) {
-        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(filename))) {
+        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(filename).toAbsolutePath())) {
             writer.write(Arrays.stream(al).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n")));
             writer.write(Arrays.stream(au).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n")));
             writer.write(Arrays.stream(di).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n")));
             writer.write(Arrays.stream(ia).mapToObj(Integer::toString).collect(Collectors.joining(" ", "", "\n")));
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -123,19 +125,7 @@ public class ProfileMatrix implements Matrix {
         for (int i = 0; i < 100; i++) {
             Random random = new Random();
             int n = abs(random.nextInt()) % 100;
-            matrixes[i] = new double[n][n];
-            for (int j = 0; j < n; j++) {
-                for (int k = 0; k < j; k++) {
-                    if ((j + k) % 5 == 1) {
-                        matrixes[i][j][k] = 0;
-                        matrixes[i][k][j] = 0;
-                    } else {
-                        matrixes[i][j][k] = max(0, random.nextDouble());
-                        matrixes[i][k][j] = max(0, random.nextDouble());
-                    }
-                }
-                matrixes[i][j][j] = random.nextDouble();
-            }
+            matrixes[i] = MatrixUtilities.generateMatrix();
             ProfileMatrix a = new ProfileMatrix(matrixes[i]);
             a.writeInFile("matr/test.txt");
             ProfileMatrix b = new ProfileMatrix("matr/test.txt");
