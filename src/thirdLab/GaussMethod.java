@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class GaussMethod {
 
 
-    private static double EPSILON = 0.000001;
+    public static double EPSILON = 0.000001;
 
     public void directWalk(double[][] matrix) {
         if (matrix[0].length > matrix.length + 1) {
