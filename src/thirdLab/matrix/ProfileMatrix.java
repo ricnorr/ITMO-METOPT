@@ -1,5 +1,6 @@
 package thirdLab.matrix;
 
+import thirdLab.LUMatrix;
 import thirdLab.MatrixUtilities;
 
 import java.io.BufferedReader;
@@ -17,7 +18,7 @@ import static java.lang.Math.max;
 /**
  * Матрица должна быть симметричной по профилю
  */
-public class ProfileMatrix implements Matrix {
+public class ProfileMatrix extends AbstractMatrix {
     private double[] al;      // эл-ты нижнего треуг
     private double[] au;      // эл-ты верхнего треуг
     private double[] di;      // хранит диагонльные элементы
@@ -148,5 +149,11 @@ public class ProfileMatrix implements Matrix {
     @Override
     public int getRowNumbers() {
         return n;
+    }
+
+    // Вероятно необходимо добавить проверку на обратимость и проверку главных миноров.
+    @Override
+    public LUMatrix LUDecomposition() {
+        return new LUMatrix(new ProfileMatrix(baseLUDecomposition(this)));
     }
 }
