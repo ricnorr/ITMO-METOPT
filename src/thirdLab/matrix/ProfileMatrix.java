@@ -126,8 +126,8 @@ public class ProfileMatrix extends AbstractMatrix {
         double[][][] matrixes = new double[100][][];
         for (int i = 0; i < 100; i++) {
             Random random = new Random();
-            int n = abs(random.nextInt()) % 100;
             matrixes[i] = MatrixUtilities.generateMatrix();
+            int n = matrixes[i].length;
             ProfileMatrix a = new ProfileMatrix(matrixes[i]);
             a.writeInFile("matr/test.txt");
             ProfileMatrix b = new ProfileMatrix("matr/test.txt");
