@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
+import static thirdLab.MatrixUtilities.vToString;
 
 
 /**
@@ -72,9 +73,9 @@ public class ProfileMatrix extends AbstractMatrix {
 
     public void writeInFile(String filename) {
         try (BufferedWriter writer = Files.newBufferedWriter(Path.of(filename).toAbsolutePath())) {
-            writer.write(Arrays.stream(al).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n")));
-            writer.write(Arrays.stream(au).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n")));
-            writer.write(Arrays.stream(di).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n")));
+            writer.write(vToString(al));
+            writer.write(vToString(au));
+            writer.write(vToString(di));
             writer.write(Arrays.stream(ia).mapToObj(Integer::toString).collect(Collectors.joining(" ", "", "\n")));
         } catch (IOException e) {
             e.printStackTrace();
