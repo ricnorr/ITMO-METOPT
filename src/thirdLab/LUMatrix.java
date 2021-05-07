@@ -50,8 +50,30 @@ public class LUMatrix {
 
     public static void main(String[] args) {
         double[][] manySolutions = {{2, 3, -1, 1}, {8, 12, -9, 8}, {4, 6, 3, -2}, {2, 3, 9, -7}};
+        System.out.println("Matrix:");
+        for (double[] manySolution : manySolutions) {
+            for (int j = 0; j < manySolution.length; j++) {
+                System.out.print(manySolution[j] + " ");
+            }
+            System.out.println();
+        }
         Matrix m = new StandardMatrix(manySolutions);
         LUMatrix LU = m.LUDecomposition();
         LU.testPrint();
+        double[][] c = new double[manySolutions.length][manySolutions.length];
+        for (int i=0; i<manySolutions.length; ++i) {
+            for (int j = 0; j < manySolutions.length; ++j) {
+                for (int k = 0; k < manySolutions.length; ++k) {
+                    c[i][j] += LU.getElemFromL(i, k) * LU.getElemFromU(k, j);
+                }
+            }
+        }
+        System.out.println("Multiply (not working probably):");
+        for (double[] doubles : c) {
+            for (int j = 0; j < doubles.length; j++) {
+                System.out.print(doubles[j] + " ");
+            }
+            System.out.println();
+        }
     }
 }

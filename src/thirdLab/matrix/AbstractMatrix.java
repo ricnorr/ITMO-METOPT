@@ -11,7 +11,9 @@ public abstract class AbstractMatrix implements Matrix {
         for (int i = 0; i < LU.length; i++) {
             Arrays.fill(LU[i], 0);
         }
-        for (int i = 0; i < LU.length; i++) {
+
+        // Вариант кода с лекции
+        /*for (int i = 0; i < LU.length; i++) {
             double sum = 0;
             for (int k = 0; k < i; k++) {
                 sum += LU[i][k] * LU[k][i];
@@ -31,7 +33,31 @@ public abstract class AbstractMatrix implements Matrix {
                 }
                 LU[j][i] = (m.getElement(j, i) - sum2) / LU[j][j];
             }
+        }*/
+
+        // Вариант кода с википедии
+        for (int i = 0; i < LU.length; i++) {
+            for (int j = 0; j < LU[i].length; j++) {
+                double sum = 0;
+                if (i <= j) {
+                    for (int k = 0; k < i; k++) {
+                        sum += LU[i][k] * LU[k][j];
+                    }
+                    LU[i][j] = m.getElement(i, j) - sum;
+                } else {
+                    for (int k = 0; k < j; k++) {
+                        sum += LU[i][k] * LU[k][j];
+                    }
+                    // Не уверен в правильности этой строчки, но нигде информацию не нашел про деление на 0
+                    if (LU[j][j] == 0) {
+                        LU[i][j] = 0;
+                        continue;
+                    }
+                    LU[i][j] = (m.getElement(i, j) - sum) / LU[j][j];
+                }
+            }
         }
+
         return LU;
     }
 }
