@@ -44,6 +44,7 @@ public class Point23 {
         return null;
     }
     public static void main(String[] args) {
+        System.out.println("размерность, k, |x* - xk|, |x* - xk|/|x*|");
         test("matr/point2", findMethodByName("genWriteAkSoLE"));
         test("matr/point3", findMethodByName("genWriteGilbertSoLE"));
     }
@@ -53,6 +54,6 @@ public class Point23 {
         if (xm != 0) {
             xm = t/xm;
         }
-        System.out.println(n + " " + k + " " + t + " " + xm);
+        System.out.println(n + "         " + k + "     " + t + "      " + xm);
     }
 }
