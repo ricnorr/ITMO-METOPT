@@ -34,14 +34,14 @@ public class LUMatrix {
     public void testPrint() {
         System.out.println("L:");
         for (int i = 0; i < LU.getRowNumbers(); i++) {
-            for (int j = 0; j < LU.getColumnNumbers(); i++) {
+            for (int j = 0; j < LU.getColumnNumbers(); j++) {
                 System.out.print(getElemFromL(i, j) + " ");
             }
             System.out.println();
         }
         System.out.println("U:");
         for (int i = 0; i < LU.getRowNumbers(); i++) {
-            for (int j = 0; j < LU.getColumnNumbers(); i++) {
+            for (int j = 0; j < LU.getColumnNumbers(); j++) {
                 System.out.print(getElemFromU(i, j) + " ");
             }
             System.out.println();
