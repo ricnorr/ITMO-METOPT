@@ -1,6 +1,7 @@
 package thirdLab;
 
 import thirdLab.matrix.Matrix;
+import thirdLab.matrix.StandardMatrix;
 
 /**
  * Отдельный класс для LU матрицы, хронящей одновременно нижний и верхний триугольники
@@ -28,5 +29,29 @@ public class LUMatrix {
             return 0;
         }
         return LU.getElement(i, j);
+    }
+
+    public void testPrint() {
+        System.out.println("L:");
+        for (int i = 0; i < LU.getRowNumbers(); i++) {
+            for (int j = 0; j < LU.getColumnNumbers(); i++) {
+                System.out.print(getElemFromL(i, j) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("U:");
+        for (int i = 0; i < LU.getRowNumbers(); i++) {
+            for (int j = 0; j < LU.getColumnNumbers(); i++) {
+                System.out.print(getElemFromU(i, j) + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        double[][] manySolutions = {{2, 3, -1, 1}, {8, 12, -9, 8}, {4, 6, 3, -2}, {2, 3, 9, -7}};
+        Matrix m = new StandardMatrix(manySolutions);
+        LUMatrix LU = m.LUDecomposition();
+        LU.testPrint();
     }
 }
