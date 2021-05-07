@@ -34,6 +34,7 @@ public class ProfileMatrix extends AbstractMatrix {
             au = Arrays.stream(reader.readLine().split("\\s+")).filter(x -> !x.isEmpty()).mapToDouble(Double::valueOf).toArray();
             di = Arrays.stream(reader.readLine().split("\\s+")).filter(x -> !x.isEmpty()).mapToDouble(Double::valueOf).toArray();
             ia = Arrays.stream(reader.readLine().split("\\s+")).filter(x -> !x.isEmpty()).mapToInt(Integer::valueOf).toArray();
+            n = di.length;
         } catch (IOException e) {
             System.err.println("IO failed");
         } catch (NumberFormatException debug) {

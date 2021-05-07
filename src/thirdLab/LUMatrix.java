@@ -48,12 +48,17 @@ public class LUMatrix {
         }
     }
 
+    // Матрица квадратная
+    public int size() {
+        return LU.getColumnNumbers();
+    }
+
     public static void main(String[] args) {
         double[][] manySolutions = {{2, 3, -1, 1}, {8, 12, -9, 8}, {4, 6, 3, -2}, {2, 3, 9, -7}};
         System.out.println("Matrix:");
         for (double[] manySolution : manySolutions) {
-            for (int j = 0; j < manySolution.length; j++) {
-                System.out.print(manySolution[j] + " ");
+            for (double v : manySolution) {
+                System.out.print(v + " ");
             }
             System.out.println();
         }
@@ -70,8 +75,8 @@ public class LUMatrix {
         }
         System.out.println("Multiply (not working probably):");
         for (double[] doubles : c) {
-            for (int j = 0; j < doubles.length; j++) {
-                System.out.print(doubles[j] + " ");
+            for (double aDouble : doubles) {
+                System.out.print(aDouble + " ");
             }
             System.out.println();
         }
