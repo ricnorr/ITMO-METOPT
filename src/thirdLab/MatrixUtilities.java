@@ -1,19 +1,15 @@
 package thirdLab;
 
-import thirdLab.matrix.Matrix;
 import thirdLab.matrix.ProfileMatrix;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.lang.Math.*;
@@ -21,7 +17,7 @@ import static java.lang.Math.*;
 public class MatrixUtilities {
     private static final Random random = new Random();
     private static int randSize() {
-        return 10 + abs(random.nextInt()) % 91;
+        return 10 + abs(random.nextInt(991));
     }
     public static double[][] generateMatrix() {
         int n = abs(random.nextInt()) % 100;
@@ -80,7 +76,9 @@ public class MatrixUtilities {
         double [] res = new double[v.length];
         for (int i = 0; i < res.length; i++) {
             final double vi = v[i];
-            res[i] = Arrays.stream(m[i]).map(x -> x * vi).sum();
+            for (int j = 0; j < res.length; j++) {
+                res[i] += v[j]*m[i][j];
+            }
         }
         return res;
     }
@@ -93,9 +91,17 @@ public class MatrixUtilities {
         double[] f = multMatrVect(m, x);
         ProfileMatrix matrix = new ProfileMatrix(m);
         matrix.writeInFile(fileName);
-        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(fileName), StandardOpenOption.APPEND)) {
-            writer.write(vToString(f));
-            writer.write(vToString(x));
+        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(fileName), StandardOpenOption.APPEND);
+             BufferedWriter mWriter = Files.newBufferedWriter(Path.of(fileName.substring(0, fileName.indexOf('.')) + "matr" + ".txt"))) {
+            writer.write(vToString(f) + vToString(x));
+            mWriter.write(n + "\n");
+            Arrays.stream(m).forEach(v -> {
+                try {
+                    mWriter.write(MatrixUtilities.vToString(v));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -123,5 +129,17 @@ public class MatrixUtilities {
             result += Math.pow(v1[i] - v2[i], 2);
         }
         return sqrt(result);
+    }
+    public static double[][] readMatrix(String fileName) {
+        double[][] res = new double[0][];
+        int i = 0;
+        try (BufferedReader reader = Files.newBufferedReader(Path.of(fileName))) {
+            int n = Integer.parseInt(reader.readLine());
+            res = new double[n][];
+            res[i] = readLineVector(reader);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 }
