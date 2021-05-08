@@ -40,6 +40,7 @@ public class MatrixUtilities {
     private static double getAij() {
         return el[abs(random.nextInt()) % 5];
     }
+    //TODO: видимо мы должны взять одну и ту же матрицу A, и прибавить к A[0][0] 10^(разные k)?
     private static double[][] generateAk(int k) {
         int n = randSize();
         double[][] res = new double[n][n];
