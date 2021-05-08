@@ -36,7 +36,7 @@ public class MatrixUtilities {
         }
         return matrix;
     }
-    private static double[] el = new double[]{0.0, -1.0, -2.0, -3.0, -4.0};
+    private static final double[] el = new double[]{0.0, -1.0, -2.0, -3.0, -4.0};
     private static double getAij() {
         return el[abs(random.nextInt()) % 5];
     }
@@ -132,11 +132,12 @@ public class MatrixUtilities {
     }
     public static double[][] readMatrix(String fileName) {
         double[][] res = new double[0][];
-        int i = 0;
         try (BufferedReader reader = Files.newBufferedReader(Path.of(fileName))) {
             int n = Integer.parseInt(reader.readLine());
             res = new double[n][];
-            res[i] = readLineVector(reader);
+            for (int i = 0; i < n; i++) {
+                res[i] = readLineVector(reader);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
