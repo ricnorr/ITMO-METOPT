@@ -8,11 +8,6 @@ import thirdLab.matrix.Matrix;
 import thirdLab.matrix.StandardMatrix;
 
 public class LUMethod {
-    private final double EPSILON = 0.0000000001;
-
-    private boolean equals(double a, double b) {
-        return Math.abs(a - b) < EPSILON;
-    }
     public double[] solve(Matrix m, double[] b) {
         // Нужна проверка на совпадение размерностей
         LUMatrix LU = MatrixUtilities.LUDecomposition(m);
@@ -43,8 +38,8 @@ public class LUMethod {
     private double[] reverseWalk(LUMatrix LU, double[] y) {
         int n = LU.size();
         double[] x = new double[n];
-        if (equals(LU.getElemFromU(n - 1, n - 1), 0)) {
-            if (equals(y[n - 1],0)) {
+        if (MatrixUtilities.equals(LU.getElemFromU(n - 1, n - 1), 0)) {
+            if (MatrixUtilities.equals(y[n - 1],0)) {
                 throw new NoExactSolutionException();
             } else {
                 throw new NoSolutionException();
@@ -56,8 +51,8 @@ public class LUMethod {
             for (int k = n - 1; k > i; k--) {
                 sum += LU.getElemFromU(i, k) * x[k];
             }
-            if (equals(LU.getElemFromU(i, i), 0)) {
-                if (equals(y[i] - sum,0)) {
+            if (MatrixUtilities.equals(LU.getElemFromU(i, i), 0)) {
+                if (MatrixUtilities.equals(y[i] - sum,0)) {
                     throw new NoExactSolutionException();
                 } else {
                     throw new NoSolutionException();
