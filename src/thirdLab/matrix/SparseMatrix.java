@@ -1,7 +1,5 @@
 package thirdLab.matrix;
 
-import thirdLab.GaussMethod;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -15,12 +13,11 @@ import java.util.stream.Collectors;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
-import static thirdLab.GaussMethod.EPSILON;
 
 /**
  * Строчно-разреженный формат. Матрица должна быть симметричной! (Относительно нулей)
  */
-public class SparseMatrix {
+public class SparseMatrix extends AbstractMatrix {
     private double[] al;      // эл-ты нижнего треуг
     private double[] au;      // эл-ты верхнего треуг
     private double[] di;      // хранит диагонльные элементы
@@ -32,15 +29,13 @@ public class SparseMatrix {
     public SparseMatrix(String filename) {
         Path path = Path.of(filename);
         try (BufferedReader reader = Files.newBufferedReader(path)) {
-            al = Arrays.stream(reader.readLine().split("\\s+")).filter(x -> !x.isEmpty()).mapToDouble(Double::valueOf).toArray();
-            au = Arrays.stream(reader.readLine().split("\\s+")).filter(x -> !x.isEmpty()).mapToDouble(Double::valueOf).toArray();
-            di = Arrays.stream(reader.readLine().split("\\s+")).filter(x -> !x.isEmpty()).mapToDouble(Double::valueOf).toArray();
-            ia = Arrays.stream(reader.readLine().split("\\s+")).filter(x -> !x.isEmpty()).mapToInt(Integer::valueOf).toArray();
-            ja = Arrays.stream(reader.readLine().split("\\s+")).filter(x -> !x.isEmpty()).mapToInt(Integer::valueOf).toArray();
+            al = MatrixUtilities.readDoubleVector(reader);
+            au = MatrixUtilities.readDoubleVector(reader);
+            di = MatrixUtilities.readDoubleVector(reader);
+            ia = MatrixUtilities.readIntVector(reader);
+            ja = MatrixUtilities.readIntVector(reader);
         } catch (IOException e) {
             System.err.println("IO failed");
-        } catch (NumberFormatException debug) {
-            System.err.println("Debug");
         }
     }
 
@@ -88,7 +83,7 @@ public class SparseMatrix {
             writer.write(Arrays.stream(di).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n")));
             writer.write(Arrays.stream(ia).mapToObj(Integer::toString).collect(Collectors.joining(" ", "", "\n")));
             writer.write(Arrays.stream(ja).mapToObj(Integer::toString).collect(Collectors.joining(" ", "", "\n")));
-        } catch (IOException e) {
+        } catch (IOException ignored) {
 
         }
     }
@@ -124,7 +119,7 @@ public class SparseMatrix {
         int index = 0;
         int count = 0;
         while (index != row) {
-            if (!equals(matrix[row][index], 0)) {
+            if (!MatrixUtilities.equals(matrix[row][index], 0)) {
                 alList.add(matrix[row][index]);
                 auList.add(matrix[index][row]);
                 jaList.add(index);
@@ -167,9 +162,6 @@ public class SparseMatrix {
         }
     }
 
-    private boolean equals(double a, double b) {
-        return Math.abs(a - b) < EPSILON;
-    }
 
     public int getColumnNumbers() {
         return n;
@@ -178,4 +170,6 @@ public class SparseMatrix {
     public int getRowNumbers() {
         return n;
     }
+
+
 }

@@ -1,8 +1,5 @@
 package thirdLab.matrix;
 
-import thirdLab.LUMatrix;
-import thirdLab.MatrixUtilities;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -13,7 +10,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
-import static thirdLab.MatrixUtilities.vToString;
+import static thirdLab.matrix.MatrixUtilities.vectorToString;
 
 
 /**
@@ -41,7 +38,6 @@ public class ProfileMatrix extends AbstractMatrix {
             System.err.println("Debug");
         }
     }
-
 
     public ProfileMatrix(double[][] matrix) {
         assert (matrix.length == matrix[0].length);
@@ -74,9 +70,9 @@ public class ProfileMatrix extends AbstractMatrix {
 
     public void writeInFile(String filename) {
         try (BufferedWriter writer = Files.newBufferedWriter(Path.of(filename).toAbsolutePath())) {
-            writer.write(vToString(al));
-            writer.write(vToString(au));
-            writer.write(vToString(di));
+            writer.write(vectorToString(al));
+            writer.write(vectorToString(au));
+            writer.write(vectorToString(di));
             writer.write(Arrays.stream(ia).mapToObj(Integer::toString).collect(Collectors.joining(" ", "", "\n")));
         } catch (IOException e) {
             e.printStackTrace();
@@ -123,6 +119,17 @@ public class ProfileMatrix extends AbstractMatrix {
     }
 
 
+    @Override
+    public int getColumnNumbers() {
+        return n;
+    }
+
+    @Override
+    public int getRowNumbers() {
+        return n;
+    }
+
+
     public static void main(String[] args) { // тесты для матрицы проходят, значит оно работает
         double[][][] matrixes = new double[100][][];
         for (int i = 0; i < 100; i++) {
@@ -143,19 +150,4 @@ public class ProfileMatrix extends AbstractMatrix {
     }
 
 
-    @Override
-    public int getColumnNumbers() {
-        return n;
-    }
-
-    @Override
-    public int getRowNumbers() {
-        return n;
-    }
-
-    // Вероятно необходимо добавить проверку на обратимость и проверку главных миноров.
-    @Override
-    public LUMatrix LUDecomposition() {
-        return new LUMatrix(new ProfileMatrix(baseLUDecomposition(this)));
-    }
 }

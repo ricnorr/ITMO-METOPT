@@ -1,26 +1,13 @@
 package secondLab.method;
 
+import thirdLab.matrix.MatrixUtilities;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static java.lang.Double.NaN;
-import static java.lang.Double.min;
-
 public class ConjugateGradientMethod extends AbstractGradientMethod {
-
-    public double[] multMatrixVector(double[][] matrix, double[] vector) {
-        double[] result = new double[vector.length];
-        for (int i = 0; i < vector.length; i++) {
-            for (int j = 0; j < vector.length; j++) {
-                result[i] += matrix[i][j] * vector[j];
-            }
-        }
-        return result;
-    }
 
 
     public double[] runImpl(double[][] a, double[] b, double[] xk, double epsilon) {
@@ -28,10 +15,10 @@ public class ConjugateGradientMethod extends AbstractGradientMethod {
         long steps = 0;
         pointsForOutput.add(xk[0]);
         pointsForOutput.add(xk[1]);
-        double[] gradient = sum(multMatrixVector(a, xk), b);
+        double[] gradient = sum(MatrixUtilities.multMatrVect(a, xk), b);
         double[] pk = negate(gradient);
         while (steps++ < Long.MAX_VALUE) {
-            double[] Apk = multMatrixVector(a, pk);
+            double[] Apk = MatrixUtilities.multMatrVect(a, pk);
             double alphaK = Math.pow(length(gradient), 2) / scalarMult(Apk, pk);
             double[] t = multiplyValue(alphaK, pk);
             double[] gradientNext = sum(gradient, multiplyValue(alphaK, Apk));
@@ -49,8 +36,6 @@ public class ConjugateGradientMethod extends AbstractGradientMethod {
         System.out.print(steps + "\n ");
         return xk;
     }
-
-
 
 
     // for point 3, matrix is diagonal, so matrix is presented as lambda function "matrix"

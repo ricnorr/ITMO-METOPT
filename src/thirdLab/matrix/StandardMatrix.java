@@ -1,7 +1,5 @@
 package thirdLab.matrix;
 
-import thirdLab.LUMatrix;
-
 /**
  * Сделано на всякий случай для совместимости с LU
  */
@@ -29,8 +27,4 @@ public class StandardMatrix extends AbstractMatrix {
         return n;
     }
 
-    @Override
-    public LUMatrix LUDecomposition() {
-        return new LUMatrix(new StandardMatrix(baseLUDecomposition(this)));
-    }
 }

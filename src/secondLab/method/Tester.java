@@ -83,7 +83,7 @@ public class Tester {
         double[] res = new QuickestDescentMethod().run(func4, derivative4, new double[]{3,3},0.0001);
         for (int i = 0; i < res.length; i++) {
             System.out.println(res[i]);
-        } */
-        testFunction(func4, derivative4, matrix4, bVector4, new double[]{1, 5});
+        }
+        testFunction(func4, derivative4, matrix4, bVector4, new double[]{1, 5}); */
     }
 }

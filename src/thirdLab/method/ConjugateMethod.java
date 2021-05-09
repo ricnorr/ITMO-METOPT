@@ -1,4 +1,4 @@
-package thirdLab;
+package thirdLab.method;
 
 import thirdLab.matrix.SparseMatrix;
 

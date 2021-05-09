@@ -1,5 +1,9 @@
-package thirdLab;
+package thirdLab.method;
 
+import thirdLab.matrix.LUMatrix;
+import thirdLab.matrix.MatrixUtilities;
+import thirdLab.exception.NoExactSolutionException;
+import thirdLab.exception.NoSolutionException;
 import thirdLab.matrix.Matrix;
 import thirdLab.matrix.StandardMatrix;
 
@@ -10,7 +14,7 @@ public class LUMethod {
     }
     public double[] solve(Matrix m, double[] b) {
         // Нужна проверка на совпадение размерностей
-        LUMatrix LU = m.LUDecomposition();
+        LUMatrix LU = MatrixUtilities.LUDecomposition(m);
         return reverseWalk(LU, directWalk(LU, b));
     }
 
