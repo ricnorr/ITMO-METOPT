@@ -9,6 +9,7 @@ import thirdLab.matrix.StandardMatrix;
 
 public class LUMethod {
     private final double EPSILON = 0.0000000001;
+
     private boolean equals(double a, double b) {
         return Math.abs(a - b) < EPSILON;
     }

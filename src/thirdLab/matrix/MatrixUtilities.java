@@ -20,7 +20,7 @@ public class MatrixUtilities {
     private static final Random random = new Random();
 
     private static int randSize() {
-        return 10 + abs(random.nextInt()) % 91;
+        return 10 + abs(random.nextInt(991));
     }
 
     public static double EPSILON = 0.0000000000000000001;
@@ -254,6 +254,20 @@ public class MatrixUtilities {
         return LU;
     }
 
+
+    public static double[][] readMatrix(String fileName) {
+        double[][] res = new double[0][];
+        try (BufferedReader reader = Files.newBufferedReader(Path.of(fileName))) {
+            int n = Integer.parseInt(reader.readLine());
+            res = new double[n][];
+            for (int i = 0; i < n; i++) {
+                res[i] = readDoubleVector(reader);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
 
     public static LUMatrix LUDecomposition(Matrix matrix) {
         return new LUMatrix(new ProfileMatrix(baseLUDecomposition(matrix)));
