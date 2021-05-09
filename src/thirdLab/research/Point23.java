@@ -1,7 +1,10 @@
 package thirdLab.research;
 
+import thirdLab.exception.NoExactSolutionException;
+import thirdLab.exception.NoSolutionException;
 import thirdLab.matrix.MatrixUtilities;
 import thirdLab.matrix.ProfileMatrix;
+import thirdLab.method.GaussMethod;
 import thirdLab.method.LUMethod;
 
 import java.io.BufferedReader;
@@ -21,18 +24,22 @@ public class Point23 {
                 Files.createDirectories(Path.of(dir));
             }
             for (int i = 0; i < TESTCOUNT; i++) {
-                int k = i + 1;
-                String curTest = dir + File.separator + "test_" + k + ".txt";
-                method.invoke(null, curTest, k);
-                ProfileMatrix m = new ProfileMatrix(curTest);
-                try (BufferedReader reader = Files.newBufferedReader(Path.of(curTest))) {
-                    for (int j = 0; j < 4; j++) {
-                        reader.readLine();
+                try {
+                    String curTest = dir + File.separator + "test_" + i + ".txt";
+                    method.invoke(null, curTest, i);
+                    ProfileMatrix m = new ProfileMatrix(curTest);
+                    try (BufferedReader reader = Files.newBufferedReader(Path.of(curTest))) {
+                        for (int j = 0; j < 4; j++) {
+                            reader.readLine();
+                        }
+                        double[] f = MatrixUtilities.readDoubleVector(reader);
+                        //new GaussMethod().directWalk(m.getMatrix(), f);
+                        printRes(m.getColumnNumbers(), i,
+                                MatrixUtilities.readDoubleVector(reader),
+                                new LUMethod().solve(m, f));
                     }
-                    double[] f = MatrixUtilities.readDoubleVector(reader);
-                    double[][] mCopy = m.getMatrix();
-                    //new GaussMethod().directWalk(mCopy, f);
-                    printRes(m.getColumnNumbers(), k, MatrixUtilities.readDoubleVector(reader), new LUMethod().solve(m, f));
+                } catch (NoSolutionException | NoExactSolutionException e) {
+                    System.err.println(e.getClass().getSimpleName());
                 }
             }
         } catch (IOException | IllegalAccessException | InvocationTargetException e) {
@@ -52,7 +59,7 @@ public class Point23 {
 
     public static void main(String[] args) {
         System.out.println("размерность, k, |x* - xk|, |x* - xk|/|x*|");
-        //test("matr/point2", findMethodByName("genWriteAkSoLE"));
+        test("matr/point2", findMethodByName("genWriteAkSoLE"));
         test("matr/point3", findMethodByName("genWriteGilbertSoLE"));
     }
 

@@ -1,9 +1,5 @@
 package thirdLab.matrix;
 
-import thirdLab.matrix.LUMatrix;
-import thirdLab.matrix.Matrix;
-import thirdLab.matrix.ProfileMatrix;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -23,8 +19,9 @@ public class MatrixUtilities {
         return 10 + abs(random.nextInt(991));
     }
 
-    public static double EPSILON = 0.0000000000000000001;
+    public static double EPSILON = 0.0000000001;
 
+    private static double[][] matrixA = null;
 
     public static double[][] generateMatrix() {
         int n = abs(random.nextInt()) % 100;
@@ -47,23 +44,35 @@ public class MatrixUtilities {
     private static double[] el = new double[]{0.0, -1.0, -2.0, -3.0, -4.0};
 
     private static double getAij() {
-        return el[abs(random.nextInt()) % 5];
+        return el[abs(random.nextInt(5))];
     }
 
     private static double[][] generateAk(int k) {
+        if (matrixA != null) {
+            matrixA[0][0] = 0;
+            matrixA[0][0] = -Arrays.stream(matrixA[0]).sum();
+            matrixA[0][0] += Math.pow(0.1, k);
+            return matrixA;
+        }
         int n = randSize();
-        double[][] res = new double[n][n];
+        matrixA = new double[n][n];
         for (int i = 0; i < n; i++) {
             for (int j = i + 1; j < n; j++) {
-                res[i][j] = getAij();
-                res[j][i] = res[i][j]; //TODO: Ak тоже симметричная?    ricnorr: кажется, да
+                matrixA[i][j] = getAij();
+                matrixA[j][i] = getAij();
+                if (!equals(matrixA[i][j], 0) && equals(matrixA[j][i], 0)) {
+                    matrixA[j][i] = -1.0;
+                }
+                if (equals(matrixA[i][j], 0) && !equals(matrixA[j][i], 0)) {
+                    matrixA[i][j] = -1.0;
+                }
             }
         }
         for (int i = 0; i < n; i++) {
-            res[i][i] = -Arrays.stream(res[i]).sum();
+            matrixA[i][i] = -Arrays.stream(matrixA[i]).sum();
         }
-        res[0][0] += Math.pow(10, -k);
-        return res;
+        matrixA[0][0] += Math.pow(0.1, k); // обычно k = 0, но для общего случая пусть так
+        return matrixA;
     }
 
     private static double[][] generateGilbert() {
@@ -108,22 +117,27 @@ public class MatrixUtilities {
     public static String vectorToString(double[] v) {
         return Arrays.stream(v).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n"));
     }
-
-
     private static void genWriteSoLE(String fileName, double[][] m) {
         int n = m.length;
         double[] x = generateX(n);
         double[] f = multMatrVect(m, x);
         ProfileMatrix matrix = new ProfileMatrix(m);
         matrix.writeInFile(fileName);
-        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(fileName), StandardOpenOption.APPEND)) {
-            writer.write(vectorToString(f));
-            writer.write(vectorToString(x));
+        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(fileName), StandardOpenOption.APPEND);
+             BufferedWriter mWriter = Files.newBufferedWriter(Path.of(fileName.substring(0, fileName.indexOf('.')) + "matr" + ".txt"))) {
+            writer.write(vectorToString(f) + vectorToString(x));
+            mWriter.write(n + "\n");
+            Arrays.stream(m).forEach(v -> {
+                try {
+                    mWriter.write(MatrixUtilities.vectorToString(v));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
     public static void genWriteAkSoLE(String fileName, int k) {
         genWriteSoLE(fileName, generateAk(k));
     }
