@@ -44,7 +44,7 @@ public class LUMethod {
         int n = LU.size();
         double[] x = new double[n];
         if (equals(LU.getElemFromU(n - 1, n - 1), 0)) {
-            if (y[n - 1] == 0) {
+            if (equals(y[n - 1],0)) {
                 throw new NoExactSolutionException();
             } else {
                 throw new NoSolutionException();
@@ -57,7 +57,7 @@ public class LUMethod {
                 sum += LU.getElemFromU(i, k) * x[k];
             }
             if (equals(LU.getElemFromU(i, i), 0)) {
-                if (y[i] - sum == 0) {
+                if (equals(y[i] - sum,0)) {
                     throw new NoExactSolutionException();
                 } else {
                     throw new NoSolutionException();
