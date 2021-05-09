@@ -7,7 +7,7 @@ import thirdLab.exception.NoSolutionException;
 import thirdLab.matrix.Matrix;
 import thirdLab.matrix.StandardMatrix;
 
-public class LUMethod {
+public class LUMethod implements MatrixMethod {
     public double[] solve(Matrix m, double[] b) {
         // Нужна проверка на совпадение размерностей
         LUMatrix LU = MatrixUtilities.LUDecomposition(m);

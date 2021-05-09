@@ -1,5 +1,6 @@
 package thirdLab.method;
 
+import thirdLab.matrix.Matrix;
 import thirdLab.matrix.MatrixUtilities;
 import thirdLab.exception.NoExactSolutionException;
 
@@ -12,7 +13,7 @@ import static thirdLab.matrix.MatrixUtilities.*;
  * сначала запускать directWalk, затем reverseWalk.
  * ReverseWalk бросит одно из исключений, если ответа нет / много решений
  */
-public class GaussMethod {
+public class GaussMethod implements MatrixMethod {
     public void directWalk(double[][] matrix, double[] vectB) {
         if (matrix[0].length > matrix.length + 1) {
             throw new NoExactSolutionException();
@@ -75,6 +76,12 @@ public class GaussMethod {
         return index;
     }
 
+    @Override
+    public double[] solve(Matrix matrix, double[] f) {
+        double[][] m = matrix.getMatrix();
+        directWalk(m, f);
+        return reverseWalk(m, f);
+    }
 
     public static void main(String[] args) {
         /* double[][] matrix = {{3, -2, -6}, {5, 1, 3}};

@@ -16,10 +16,11 @@ public class MatrixUtilities {
     private static final Random random = new Random();
 
     private static int randSize() {
-        return 10 + abs(random.nextInt(991));
+        return 10 + abs(random.nextInt(211));
+        //return 220;
     }
 
-    public static double EPSILON = 0.0000000001;
+    public static double EPSILON = 0.0000000000000000000000000000000000001;
 
     private static double[][] matrixA = null;
 

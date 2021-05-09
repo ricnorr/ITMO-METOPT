@@ -16,7 +16,7 @@ import java.nio.file.Path;
 import java.lang.reflect.Method;
 
 public class Point23 {
-    final static int TESTCOUNT = 10;
+    final static int TESTCOUNT = 20;
 
     private static void test(String dir, Method method) {
         try {
@@ -33,7 +33,7 @@ public class Point23 {
                             reader.readLine();
                         }
                         double[] f = MatrixUtilities.readDoubleVector(reader);
-                        //new GaussMethod().directWalk(m.getMatrix(), f);
+                        new GaussMethod().directWalk(m.getMatrix(), f);
                         printRes(m.getColumnNumbers(), i,
                                 MatrixUtilities.readDoubleVector(reader),
                                 new LUMethod().solve(m, f));
