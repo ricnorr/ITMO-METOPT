@@ -269,7 +269,8 @@ public class MatrixUtilities {
         return res;
     }
 
+    // Пока StandardMatrix, не учел, что ProfileMatrix не поддерживает несимметричные матрицы
     public static LUMatrix LUDecomposition(Matrix matrix) {
-        return new LUMatrix(new ProfileMatrix(baseLUDecomposition(matrix)));
+        return new LUMatrix(new StandardMatrix(baseLUDecomposition(matrix)));
     }
 }

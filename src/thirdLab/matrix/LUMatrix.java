@@ -51,7 +51,7 @@ public class LUMatrix {
     }
 
     public static void main(String[] args) {
-        double[][] manySolutions = {{2, 3, -1, 1}, {8, 12, -9, 8}, {4, 6, 3, -2}, {2, 3, 9, -7}};
+        double[][] manySolutions = {{2, 3, -1, 1}, {0, 12, -9, 8}, {4, 6, 3, -2}, {2, 3, 9, -7}};
         System.out.println("Matrix:");
         for (double[] manySolution : manySolutions) {
             for (double v : manySolution) {
@@ -59,7 +59,7 @@ public class LUMatrix {
             }
             System.out.println();
         }
-        Matrix m = new StandardMatrix(manySolutions);
+        Matrix m = new ProfileMatrix(manySolutions);
         LUMatrix LU = MatrixUtilities.LUDecomposition(m);
         LU.testPrint();
         double[][] c = new double[manySolutions.length][manySolutions.length];
