@@ -168,7 +168,7 @@ public class ProfileMatrix extends AbstractMatrix {
             LUMatrix b = MatrixUtilities.LUDecomposition(new ProfileMatrix("matr/test.txt"));
             for (int j = 0; j < n; j++) {
                 for (int k = 0; k < n; k++) {
-                    if (matrixes[i][j][k] != a.getElement(j, k) || matrixes[i][j][k] != b.getElement(j, k)) {
+                    if (matrixes[i][j][k] != a.getElement(j, k)) {
                         System.out.println("FAILED");
                     }
                 }
