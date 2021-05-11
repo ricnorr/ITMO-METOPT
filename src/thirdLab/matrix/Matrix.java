@@ -8,4 +8,6 @@ public interface Matrix {
     int getRowNumbers();
 
     double[][] getMatrix();
+
+    void replace(int i, int j, double x);
 }

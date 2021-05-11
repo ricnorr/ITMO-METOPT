@@ -171,5 +171,10 @@ public class SparseMatrix extends AbstractMatrix {
         return n;
     }
 
+    @Override
+    public void replace(int i, int j, double x) {
+
+    }
+
 
 }

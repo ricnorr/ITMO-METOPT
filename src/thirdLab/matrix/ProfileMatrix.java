@@ -129,6 +129,34 @@ public class ProfileMatrix extends AbstractMatrix {
         return n;
     }
 
+    /**
+     * Заменяет элемент только если он был в профиле
+     * Необходимо для LU разложения
+     */
+    @Override
+    public void replace(int i, int j, double x) {
+        if (i == j) {
+            di[i] = x;
+            return;
+        }
+        boolean flag = true;
+        if (j > i) { // now minimum is a
+            int temp = j;
+            j = i;
+            i = temp;
+            flag = false;
+        }
+        int rowProfile = ia[i + 1] - ia[i];
+        int indexWhereProfileBegins = i - rowProfile;
+        if (j >= indexWhereProfileBegins) {
+            if (flag) {
+                al[ia[i] + j - indexWhereProfileBegins] = x;
+            } else {
+                au[ia[i] + j - indexWhereProfileBegins] = x;
+            }
+        }
+    }
+
 
     public static void main(String[] args) { // тесты для матрицы проходят, значит оно работает
         double[][][] matrixes = new double[100][][];
