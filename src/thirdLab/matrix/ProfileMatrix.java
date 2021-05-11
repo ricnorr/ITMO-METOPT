@@ -161,12 +161,11 @@ public class ProfileMatrix extends AbstractMatrix {
     public static void main(String[] args) { // тесты для матрицы проходят, значит оно работает
         double[][][] matrixes = new double[100][][];
         for (int i = 0; i < 100; i++) {
-            Random random = new Random();
             matrixes[i] = MatrixUtilities.generateMatrix();
             int n = matrixes[i].length;
             ProfileMatrix a = new ProfileMatrix(matrixes[i]);
             a.writeInFile("matr/test.txt");
-            ProfileMatrix b = new ProfileMatrix("matr/test.txt");
+            LUMatrix b = MatrixUtilities.LUDecomposition(new ProfileMatrix("matr/test.txt"));
             for (int j = 0; j < n; j++) {
                 for (int k = 0; k < n; k++) {
                     if (matrixes[i][j][k] != a.getElement(j, k) || matrixes[i][j][k] != b.getElement(j, k)) {

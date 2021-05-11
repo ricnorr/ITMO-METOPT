@@ -28,6 +28,10 @@ public class LUMatrix {
         return LU.getElement(i, j);
     }
 
+    public double getElement(int i, int j) {
+        return LU.getElement(i, j);
+    }
+
     public void testPrint() {
         System.out.println("L:");
         for (int i = 0; i < LU.getRowNumbers(); i++) {

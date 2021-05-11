@@ -33,10 +33,9 @@ public class Point23 {
                             reader.readLine();
                         }
                         double[] f = MatrixUtilities.readDoubleVector(reader);
-                        new GaussMethod().directWalk(m.getMatrix(), f);
-                        printRes(m.getColumnNumbers(), i,
-                                MatrixUtilities.readDoubleVector(reader),
-                                new LUMethod().solve(m, f));
+                        double[] ans =  MatrixUtilities.readDoubleVector(reader);
+                        printRes(m.getColumnNumbers(), i, ans, new GaussMethod().solve(m, f));
+                        printRes(m.getColumnNumbers(), i, ans, new LUMethod().solve(m, f));
                     }
                 } catch (NoSolutionException | NoExactSolutionException e) {
                     System.err.println(e.getClass().getSimpleName());
