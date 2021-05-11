@@ -220,22 +220,21 @@ public class MatrixUtilities {
      * т.к. они состоят из разницы 0 с суммой, в каждой паре которой будет 0-й элемент из этой же строки
      */
     private static Matrix baseLUDecomposition(Matrix m) {
-        double[][] LU = new double[m.getRowNumbers()][m.getColumnNumbers()];
         // Вариант кода с википедии
-        for (int i = 0; i < LU.length; i++) {
-            for (int j = 0; j < LU[i].length; j++) {
+        for (int i = 0; i < m.getRowNumbers(); i++) {
+            for (int j = 0; j < m.getColumnNumbers(); j++) {
                 double sum = 0;
                 if (i <= j) {
                     for (int k = 0; k < i; k++) {
-                        sum += LU[i][k] * LU[k][j];
+                        sum += m.getElement(i, k) * m.getElement(k, j);
                     }
                     m.replace(i, j, m.getElement(i, j) - sum);
                 } else {
                     for (int k = 0; k < j; k++) {
-                        sum += LU[i][k] * LU[k][j];
+                        sum += m.getElement(i, k) * m.getElement(k, j);
                     }
                     // Не уверен в правильности этой строчки, но нигде информацию не нашел про деление на 0
-                    if (m.getElement(j, j) == 0) {
+                    if (equals(m.getElement(j, j), 0)) {
                         m.replace(i, j, 0);
                         continue;
                     }
