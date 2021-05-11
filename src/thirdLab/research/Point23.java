@@ -37,8 +37,10 @@ public class Point23 {
                         printRes(m.getColumnNumbers(), i, ans, new GaussMethod().solve(m, f));
                         printRes(m.getColumnNumbers(), i, ans, new LUMethod().solve(m, f));
                     }
-                } catch (NoSolutionException | NoExactSolutionException e) {
-                    System.err.println(e.getClass().getSimpleName());
+                    double[] f = MatrixUtilities.readDoubleVector(reader);
+                    double[][] mCopy = m.getMatrix();
+                    //new GaussMethod().directWalk(mCopy, f);
+                    printRes(m.getColumnNumbers(), k, MatrixUtilities.readDoubleVector(reader), new LUMethod().solve(m, f));
                 }
             }
         } catch (IOException | IllegalAccessException | InvocationTargetException e) {

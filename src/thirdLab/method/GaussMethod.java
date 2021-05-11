@@ -23,8 +23,9 @@ public class GaussMethod implements MatrixMethod {
         while (currentRow < matrix.length && currentCol < matrix[0].length) {
             int index = findMaxByAbsInColumn(matrix, currentRow, currentCol);
             if (MatrixUtilities.equals(matrix[index][currentCol], 0)) {
-                currentCol++;
-                continue;
+                //currentCol++;
+                throw new NoExactSolutionException();
+                //continue;
             }
             swapLines(matrix, index, currentRow);
             swapElements(vectB, index, currentRow);
@@ -41,20 +42,20 @@ public class GaussMethod implements MatrixMethod {
 
     public double[] reverseWalk(double[][] matrix, double[] vectB) {
         int currentRow = matrix.length - 1;
-        /*while (currentRow > -1 && equals(matrix[currentRow][matrix[0].length - 1], 0)) {
-            if (!equals(vectB[currentRow], 0)) {
+        /*while (currentRow > -1 && MatrixUtilities.equals(matrix[currentRow][matrix[0].length - 1], 0)) {
+            if (!MatrixUtilities.equals(vectB[currentRow], 0)) {
                 throw new NoSolutionException();
             }
             currentRow--;
-        }
-        if (currentRow == -1 || countNoZeroElements(matrix, currentRow) > 1) {
+        }*/
+        /*if (currentRow == -1 || countNoZeroElements(matrix, currentRow) > 1) {
             throw new NoExactSolutionException();
         }*/
         double[] answer = new double[matrix[0].length];
         for (int i = answer.length - 1; i > -1; i--) {
-            /*if (equals(matrix[i][i], 0)) {
+            if (MatrixUtilities.equals(matrix[i][i], 0)) {
                 throw new NoExactSolutionException();
-            } */
+            }
             double rightPart = vectB[i];
             for (int j = i + 1; j < answer.length; j++) {
                 rightPart -= matrix[i][j] * answer[j];
