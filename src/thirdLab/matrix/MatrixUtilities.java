@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.Math.*;
@@ -26,8 +24,8 @@ public class MatrixUtilities {
 
     private static double[][] matrixA = null;
 
-    // Лоховская переменная, но менять логику тестов сложнее
     private static ProfileMatrix profileMatrixA = null;
+    private static SparseMatrix sparseMatrixA = null;
 
     public static double[][] generateMatrix() {
         int n = abs(random.nextInt()) % 100;
@@ -45,6 +43,73 @@ public class MatrixUtilities {
             matrix[j][j] = random.nextDouble();
         }
         return matrix;
+    }
+
+    /**
+     * Генерирует первую матрицу Ak в формате SparseMatrix
+     * Для генерация k матрицы необходимо, чтобы была сгенерирована k - 1 матрица
+     */
+    public static SparseMatrix generateSparseMatrix(int k) {
+        if (sparseMatrixA != null) {
+            if (k == 0) {
+                double firstElement = sparseMatrixA.getElement(0, 0);
+                sparseMatrixA.replaceD(0, firstElement - Math.pow(0.1, k - 1) + Math.pow(0.1, k));
+            }
+            return sparseMatrixA;
+        }
+        int n = randSize();
+        double[] al;
+        double[] au;
+        ArrayList<Double> alList = new ArrayList<>();
+        ArrayList<Double> auList = new ArrayList<>();
+        ArrayList<Integer> jaList = new ArrayList<>();
+        double[] di = new double[n];
+        int[] ia = new int[n + 2];
+        int[] ja;
+        ia[0] = 0;
+        ia[1] = 0;
+        // Количество элементов на i-й строчке/столбце
+        for (int i = 1; i < n; i++) {
+            ia[i + 1] = ia[i] + random.nextInt(Math.min(i + 1, MAX_PROFILE));
+        }
+        // Добавление внедиагональных элементов
+        for (int i = 0; i < n; i++) {
+            di[i] = 0;
+            int count = ia[i + 1] - ia[i];
+            Set<Integer> notNullElements = new TreeSet<>();
+            for (int j = 0; j < count; j++) {
+                notNullElements.add(random.nextInt(i));
+            }
+            for (Integer index : notNullElements) {
+                // a[i][index]
+                // идет в сумму a[i][i]
+                double aIIndex = getNotNullAij();
+                alList.add(aIIndex);
+                di[i] -= aIIndex;
+                // a[index][i]
+                // идет в сумму a[index][index]
+                double aIndexI = getNotNullAij();
+                auList.add(aIndexI);
+                di[index] -= aIndexI;
+                jaList.add(index);
+            }
+        }
+        al = new double[alList.size()];
+        au = new double[auList.size()];
+        ja = new int[jaList.size()];
+        for (int i = 0; i < alList.size(); i++) {
+            al[i] = alList.get(i);
+        }
+        for (int i = 0; i < auList.size(); i++) {
+            au[i] = auList.get(i);
+        }
+        for (int i = 0; i < jaList.size(); i++) {
+            ja[i] = jaList.get(i);
+        }
+        // k == 0, так как первая генерация
+        di[0] += 1;
+        sparseMatrixA = new SparseMatrix(al, au, di, ia, ja);
+        return sparseMatrixA;
     }
 
     /**
@@ -81,12 +146,12 @@ public class MatrixUtilities {
             for (int p = profile; p < i; p++) {
                 // a[i][p]
                 // идет в сумму a[i][i]
-                double aip = getAij();
+                double aip = getNotNullAij();
                 alList.add(aip);
                 di[i] -= aip;
                 // a[p][i]
                 // идет в сумму a[p][p]
-                double api = getAij();
+                double api = getNotNullAij();
                 auList.add(api);
                 di[p] = api;
             }
@@ -109,6 +174,10 @@ public class MatrixUtilities {
 
     private static double getAij() {
         return el[abs(random.nextInt(5))];
+    }
+
+    private static double getNotNullAij() {
+        return el[abs(random.nextInt(4)) + 1];
     }
 
     private static double[][] generateAk(int k) {

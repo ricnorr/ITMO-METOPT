@@ -39,6 +39,14 @@ public class SparseMatrix extends AbstractMatrix {
         }
     }
 
+    public SparseMatrix(double[] al, double[] au, double[] di, int[] ia, int[] ja) {
+        this.al = al;
+        this.au = au;
+        this.di = di;
+        this.ia = ia;
+        this.ja = ja;
+        this.n = di.length;
+    }
 
     public SparseMatrix(double[][] matrix) {
         assert (matrix.length == matrix[0].length);
@@ -176,5 +184,10 @@ public class SparseMatrix extends AbstractMatrix {
 
     }
 
-
+    /**
+     * Костыль чтобы менять d[i]
+     */
+    public void replaceD(int i, double x) {
+        di[i] = x;
+    }
 }
