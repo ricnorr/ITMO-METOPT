@@ -138,6 +138,21 @@ public class SparseMatrix extends AbstractMatrix {
         return count;
     }
 
+    public double[] smartMultiplication(double[] vector) {
+        int leftBorderInJa = 0;
+        double[] result = new double[vector.length];
+        for (int i = 0; i < n; i++) {
+            int cnt = ia[i + 1] - ia[i];
+            result[i] += di[i] * vector[i];
+            for (int j = 0; j < cnt; j++) {
+                int column = ja[leftBorderInJa + j];
+                result[i] += al[leftBorderInJa + j] * vector[column];
+                result[column] += au[leftBorderInJa + j] * vector[i];
+            }
+            leftBorderInJa += cnt;
+        }
+        return result;
+    }
 
     public static void main(String[] args) { // тесты для матрицы проходят, значит оно работает
         double[][][] matrixes = new double[100][][];
