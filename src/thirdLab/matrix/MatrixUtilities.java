@@ -20,6 +20,11 @@ public class MatrixUtilities {
         //return 220;
     }
 
+    private static int bigRandSize() {
+        return 10 + abs(random.nextInt(1000000));
+        //return 220;
+    }
+
     public static double EPSILON = 0.0000000000000000000000000000000000001;
 
     private static double[][] matrixA = null;
@@ -57,7 +62,7 @@ public class MatrixUtilities {
             }
             return sparseMatrixA;
         }
-        int n = randSize();
+        int n = bigRandSize();
         double[] al;
         double[] au;
         ArrayList<Double> alList = new ArrayList<>();

@@ -145,6 +145,9 @@ public class SparseMatrix extends AbstractMatrix {
             int cnt = ia[i + 1] - ia[i];
             result[i] += di[i] * vector[i];
             for (int j = 0; j < cnt; j++) {
+                if (leftBorderInJa + j > ja.length - 1) {
+                    System.out.println("");
+                }
                 int column = ja[leftBorderInJa + j];
                 result[i] += al[leftBorderInJa + j] * vector[column];
                 result[column] += au[leftBorderInJa + j] * vector[i];
