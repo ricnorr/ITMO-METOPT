@@ -46,7 +46,7 @@ public class MatrixUtilities {
     }
 
     /**
-     * Генерирует первую матрицу Ak в формате SparseMatrix
+     * Генерирует первую матрицу Ak в формате SparseMatrix (в симметричном виде)
      * Для генерация k матрицы необходимо, чтобы была сгенерирована k - 1 матрица
      */
     public static SparseMatrix generateSparseMatrix(int k) {
@@ -83,14 +83,13 @@ public class MatrixUtilities {
             for (Integer index : notNullElements) {
                 // a[i][index]
                 // идет в сумму a[i][i]
-                double aIIndex = getNotNullAij();
-                alList.add(aIIndex);
-                di[i] -= aIIndex;
+                double a = getNotNullAij();
+                alList.add(a);
+                di[i] -= a;
                 // a[index][i]
                 // идет в сумму a[index][index]
-                double aIndexI = getNotNullAij();
-                auList.add(aIndexI);
-                di[index] -= aIndexI;
+                auList.add(a);
+                di[index] -= a;
                 jaList.add(index);
             }
         }
