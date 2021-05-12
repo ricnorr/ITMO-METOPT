@@ -51,7 +51,7 @@ public class MatrixUtilities {
      */
     public static SparseMatrix generateSparseMatrix(int k) {
         if (sparseMatrixA != null) {
-            if (k == 0) {
+            if (k != 0) {
                 double firstElement = sparseMatrixA.getElement(0, 0);
                 sparseMatrixA.replaceD(0, firstElement - Math.pow(0.1, k - 1) + Math.pow(0.1, k));
             }
@@ -274,6 +274,18 @@ public class MatrixUtilities {
                     e.printStackTrace();
                 }
             });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void genWriteSparseMatrix(String fileName, int k) {
+        SparseMatrix m = generateSparseMatrix(k);
+        int n = m.getRowNumbers();
+        double[] x = generateX(n);
+        double[] f = m.smartMultiplication(x);
+        m.writeInFile(fileName);
+        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(fileName), StandardOpenOption.APPEND)) {
+            writer.write(vectorToString(f) + vectorToString(x));
         } catch (IOException e) {
             e.printStackTrace();
         }
