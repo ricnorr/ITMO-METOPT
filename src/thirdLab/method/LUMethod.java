@@ -72,9 +72,9 @@ public class LUMethod implements MatrixMethod {
         double[] b3 = {0, -2, 5};
         double[][] matrixOneSolution = {{2, 1, 1}, {1, -1, 0}, {3, -1, 2}};
         double[] b4 = {2, -2, 2};
-        Matrix m = new StandardMatrix(matrixOneSolution);
+        Matrix m = new StandardMatrix(matrixOneSolution2);
         LUMethod method = new LUMethod();
-        double[] res = method.solve(m, b4);
+        double[] res = method.solve(m, b2);
         for (double re : res) {
             System.out.print(re + " ");
         }

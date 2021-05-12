@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import static java.lang.Math.*;
 
 public class MatrixUtilities {
     private static final Random random = new Random();
+    private static final int MAX_PROFILE = 20;
 
     private static int randSize() {
         return 10 + abs(random.nextInt(211));
@@ -23,6 +25,9 @@ public class MatrixUtilities {
     public static double EPSILON = 0.0000000000000000000000000000000000001;
 
     private static double[][] matrixA = null;
+
+    // Лоховская переменная, но менять логику тестов сложнее
+    private static ProfileMatrix profileMatrixA = null;
 
     public static double[][] generateMatrix() {
         int n = abs(random.nextInt()) % 100;
@@ -42,7 +47,65 @@ public class MatrixUtilities {
         return matrix;
     }
 
-    private static double[] el = new double[]{0.0, -1.0, -2.0, -3.0, -4.0};
+    /**
+     * Генерирует первую матрицу Ak в формате ProfileMatrix
+     * Для генерация k матрицы необходимо, чтобы была сгенерирована k - 1 матрица
+     */
+    public static ProfileMatrix generateProfileMatrix(int k) {
+        if (profileMatrixA != null) {
+            if (k == 0) {
+                double firstElement = profileMatrixA.getElement(0, 0);
+                profileMatrixA.replace(0, 0, firstElement - Math.pow(0.1, k - 1) + Math.pow(0.1, k));
+            }
+            return profileMatrixA;
+        }
+        int n = randSize();
+        double[] al;
+        double[] au;
+        ArrayList<Double> alList = new ArrayList<>();
+        ArrayList<Double> auList = new ArrayList<>();
+        double[] di = new double[n];
+        int[] ia = new int[n + 2];
+        ia[0] = 0;
+        ia[1] = 0;
+        // Профиль на i-й строчке/столбце
+        for (int i = 1; i < n; i++) {
+            ia[i + 1] = ia[i] + random.nextInt(Math.min(i + 1, MAX_PROFILE));
+        }
+        // Добавление внедиагональных элементов
+        for (int i = 0; i < n; i++) {
+            di[i] = 0;
+            int rowProfile = ia[i + 1] - ia[i];
+            int profile = i - rowProfile;
+            // Комменты ниже в основном для меня, чтобы не запутаться. Могу забыть убрать
+            for (int p = profile; p < i; p++) {
+                // a[i][p]
+                // идет в сумму a[i][i]
+                double aip = getAij();
+                alList.add(aip);
+                di[i] -= aip;
+                // a[p][i]
+                // идет в сумму a[p][p]
+                double api = getAij();
+                auList.add(api);
+                di[p] = api;
+            }
+        }
+        al = new double[alList.size()];
+        au = new double[auList.size()];
+        for (int i = 0; i < alList.size(); i++) {
+            al[i] = alList.get(i);
+        }
+        for (int i = 0; i < auList.size(); i++) {
+            au[i] = auList.get(i);
+        }
+        // k == 0, так как первая генерация
+        di[0] += 1;
+        profileMatrixA = new ProfileMatrix(al, au, di, ia);
+        return profileMatrixA;
+    }
+
+    private static final double[] el = new double[]{0.0, -1.0, -2.0, -3.0, -4.0};
 
     private static double getAij() {
         return el[abs(random.nextInt(5))];
@@ -215,35 +278,7 @@ public class MatrixUtilities {
     }
 
 
-    private static double[][] baseLUDecomposition(Matrix m) {
-        double[][] LU = new double[m.getRowNumbers()][m.getColumnNumbers()];
-        /* for (int i = 0; i < LU.length; i++) {
-            LU[i][i] = 1;
-        }*/
-        // Вариант кода с лекции
-        /*for (int i = 0; i < LU.length; i++) {
-            double sum = 0;
-            for (int k = 0; k < i; k++) {
-                sum += LU[i][k] * LU[k][i];
-            }
-            LU[i][i] = m.getElement(i, i) - sum;
-        }
-        for (int i = 1; i < LU.length; i++) {
-            for (int j = 0; j < i; j++) {
-                double sum1 = 0;
-                for (int k = 0; k < j; k++) {
-                    sum1 += LU[i][k] * LU[k][j];
-                }
-                LU[i][j] = m.getElement(i, j) - sum1;
-                double sum2 = 0;
-                for (int k = 0; k < j; k++) {
-                    sum2 += LU[j][k] * LU[k][i];
-                }
-                LU[j][i] = (m.getElement(j, i) - sum2) / LU[j][j];
-            }
-        }*/
-
-        // Вариант кода с википедии
+    private static Matrix baseLUDecomposition(Matrix m) {
         for (int i = 0; i < m.getRowNumbers(); i++) {
             for (int j = 0; j < m.getColumnNumbers(); j++) {
                 double sum = 0;

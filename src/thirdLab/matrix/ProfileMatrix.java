@@ -67,6 +67,14 @@ public class ProfileMatrix extends AbstractMatrix {
         }
     }
 
+    public ProfileMatrix(double[] al, double[] au, double[] di, int[] ia) {
+        this.al = al;
+        this.au = au;
+        this.di = di;
+        this.ia = ia;
+        this.n = di.length;
+    }
+
 
     public void writeInFile(String filename) {
         try (BufferedWriter writer = Files.newBufferedWriter(Path.of(filename).toAbsolutePath())) {

@@ -56,8 +56,8 @@ public class LUMatrix {
 
     public static void main(String[] args) {
         double[][] manySolutions = {
-                {2, 3, 0, 1},
-                {3, 3, 3, 0},
+                {2, 5, 0, 1},
+                {3, 3, 5, 0},
                 {0, 3, 3, 9},
                 {1, 0, 9, -7}};
         System.out.println("Matrix:");
@@ -68,8 +68,6 @@ public class LUMatrix {
             System.out.println();
         }
         Matrix m = new ProfileMatrix(manySolutions);
-        m.replace(2, 0, 5);
-        System.out.println(m.getElement(2, 0));
         LUMatrix LU = MatrixUtilities.LUDecomposition(m);
         LU.testPrint();
         double[][] c = new double[manySolutions.length][manySolutions.length];

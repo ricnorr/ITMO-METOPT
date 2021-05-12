@@ -4,6 +4,8 @@ import thirdLab.exception.NoExactSolutionException;
 import thirdLab.exception.NoSolutionException;
 import thirdLab.matrix.MatrixUtilities;
 import thirdLab.matrix.ProfileMatrix;
+import thirdLab.matrix.SparseMatrix;
+import thirdLab.method.ConjugateMethod;
 import thirdLab.method.GaussMethod;
 import thirdLab.method.LUMethod;
 
@@ -34,13 +36,15 @@ public class Point23 {
                         }
                         double[] f = MatrixUtilities.readDoubleVector(reader);
                         double[] ans =  MatrixUtilities.readDoubleVector(reader);
-                        printRes(m.getColumnNumbers(), i, ans, new GaussMethod().solve(m, f));
-                        printRes(m.getColumnNumbers(), i, ans, new LUMethod().solve(m, f));
+                        /*
+                        printRes(m.getColumnNumbers(), i, ans, new LUMethod().solve(new ProfileMatrix(m.getMatrix()), f));
+                        printRes(m.getColumnNumbers(), i, ans, new GaussMethod().solve(new ProfileMatrix(m.getMatrix()), f));
+
+                         */
+                        printRes(m.getColumnNumbers(), i, ans, new ConjugateMethod().solve(new SparseMatrix(m.getMatrix()), f));
                     }
-                    double[] f = MatrixUtilities.readDoubleVector(reader);
-                    double[][] mCopy = m.getMatrix();
-                    //new GaussMethod().directWalk(mCopy, f);
-                    printRes(m.getColumnNumbers(), k, MatrixUtilities.readDoubleVector(reader), new LUMethod().solve(m, f));
+                } catch (NoSolutionException | NoExactSolutionException e) {
+                    System.err.println(e.getClass().getSimpleName());
                 }
             }
         } catch (IOException | IllegalAccessException | InvocationTargetException e) {
