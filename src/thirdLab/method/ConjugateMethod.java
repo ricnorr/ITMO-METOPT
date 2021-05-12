@@ -87,4 +87,9 @@ public class ConjugateMethod implements MatrixMethod {
             System.out.println(x);
         }
     }
+
+    @Override
+    public double[] solve(Matrix matrix, double[] f) {
+        throw new IllegalStateException();
+    }
 }
