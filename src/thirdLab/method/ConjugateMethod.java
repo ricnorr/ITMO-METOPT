@@ -1,6 +1,5 @@
 package thirdLab.method;
 
-import thirdLab.matrix.MatrixUtilities;
 import thirdLab.matrix.SparseMatrix;
 
 import java.util.Arrays;
@@ -8,6 +7,7 @@ import java.util.Arrays;
 public class ConjugateMethod {
 
     private static int MAX_ITERATIONS = 3000;
+    public static int lastIterations;
 
     double[] mult(SparseMatrix A, double[] vect) {
         double[] res = new double[A.getColumnNumbers()];
@@ -74,6 +74,7 @@ public class ConjugateMethod {
             x0 = xK;
             z0 = zK;
             r0 = rK;
+            lastIterations = k;
         }
         return x0;
     }

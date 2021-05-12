@@ -21,7 +21,7 @@ public class MatrixUtilities {
     }
 
     private static int bigRandSize() {
-        return 10 + abs(random.nextInt(100000));
+        return 10 + abs(random.nextInt(10000));
         //return 220;
     }
 
@@ -62,7 +62,7 @@ public class MatrixUtilities {
      * Генерирует первую матрицу Ak в формате SparseMatrix (в симметричном виде)
      * Для генерация k матрицы необходимо, чтобы была сгенерирована k - 1 матрица
      */
-    public static SparseMatrix generateSparseMatrix(int k) {
+    public static SparseMatrix generateSparseMatrix(int k, int n) {
         if (sparseMatrixA != null) {
             if (k != 0) {
                 double firstElement = sparseMatrixA.getElement(0, 0);
@@ -70,7 +70,7 @@ public class MatrixUtilities {
             }
             return sparseMatrixA;
         }
-        int n = bigRandSize();
+        //int n = bigRandSize();
         double[] al;
         double[] au;
         ArrayList<Double> alList = new ArrayList<>();
@@ -119,8 +119,9 @@ public class MatrixUtilities {
         }
         // k == 0, так как первая генерация
         di[0] += 1;
-        sparseMatrixA = new SparseMatrix(al, au, di, ia, ja);
-        return sparseMatrixA;
+        /* sparseMatrixA = new SparseMatrix(al, au, di, ia, ja);
+        return sparseMatrixA;*/
+        return new SparseMatrix(al, au, di, ia, ja);
     }
 
     /**
@@ -304,7 +305,7 @@ public class MatrixUtilities {
         }
     }
     public static void genWriteSparseMatrix(String fileName, int k) {
-        SparseMatrix m = generateSparseMatrix(k);
+        SparseMatrix m = generateSparseMatrix(k, 4);
         int n = m.getRowNumbers();
         double[] x = generateX(n);
         double[] f = m.smartMultiplication(x);
