@@ -208,6 +208,16 @@ public class MatrixUtilities {
         return matrixA;
     }
 
+    public static void checkSymmetric(Matrix matrix) {
+        for (int i = 0; i < matrix.getColumnNumbers(); i++) {
+            for (int j = 0; j < matrix.getColumnNumbers(); j++) {
+                if (!((equals(matrix.getElement(i, j), 0) && equals(matrix.getElement(j, i), 0))
+                        || (!equals(matrix.getElement(i, j), 0) && !equals(matrix.getElement(j, i), 0)))) {
+                    throw new IllegalStateException();
+                }
+            }
+        }
+    }
     private static double[][] generateGilbert() {
         int n = randSize();
         double[][] res = new double[n][n];

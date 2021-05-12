@@ -1,12 +1,13 @@
 package thirdLab.method;
 
+import thirdLab.matrix.MatrixUtilities;
 import thirdLab.matrix.SparseMatrix;
 
 import java.util.Arrays;
 
 public class ConjugateMethod {
 
-    private static int MAX_ITERATIONS = 2000;
+    private static int MAX_ITERATIONS = 3000;
 
     double[] mult(SparseMatrix A, double[] vect) {
         double[] res = new double[A.getColumnNumbers()];
@@ -54,6 +55,7 @@ public class ConjugateMethod {
     public double[] solve(SparseMatrix A, double[] f, double epsilon) {
         double[] x0 = new double[f.length];
         x0[0] = 1;
+        MatrixUtilities.checkSymmetric(A);
         double[] r0 = subtract(f, A.smartMultiplication(x0));
         double[] z0 = r0;
         for (int k = 1; k < MAX_ITERATIONS; k++) {
