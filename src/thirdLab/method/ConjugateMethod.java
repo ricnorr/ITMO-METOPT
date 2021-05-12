@@ -53,10 +53,10 @@ public class ConjugateMethod implements MatrixMethod {
     }
 
 
-    public double[] solve(Matrix A, double[] f) {
+    public double[] solve(SparseMatrix A, double[] f) {
         double[] x0 = new double[f.length];
         x0[0] = 1;
-        double[] r0 = subtract(f, mult(A, x0));
+        double[] r0 = subtract(f, A.smartMultiplication(x0));
         double[] z0 = r0;
         for (int k = 1; k < MAX_ITERATIONS; k++) {
             double[] Az0 = mult(A, z0);
