@@ -36,12 +36,9 @@ public class Point23 {
                         }
                         double[] f = MatrixUtilities.readDoubleVector(reader);
                         double[] ans =  MatrixUtilities.readDoubleVector(reader);
-                        /*
-                        printRes(m.getColumnNumbers(), i, ans, new LUMethod().solve(new ProfileMatrix(m.getMatrix()), f));
-                        printRes(m.getColumnNumbers(), i, ans, new GaussMethod().solve(new ProfileMatrix(m.getMatrix()), f));
-
-                         */
-                        printRes(m.getColumnNumbers(), i, ans, new ConjugateMethod().solve(new SparseMatrix(m.getMatrix()), f));
+                        //printRes(m.getColumnNumbers(), i, ans, new LUMethod().solve(new ProfileMatrix(m.getMatrix()), f));
+                        //printRes(m.getColumnNumbers(), i, ans, new GaussMethod().solve(new ProfileMatrix(m.getMatrix()), f));
+                         printRes(m.getColumnNumbers(), i, ans, new ConjugateMethod().solve(new SparseMatrix(m.getMatrix()), f, 0.0000000001));
                     }
                 } catch (NoSolutionException | NoExactSolutionException e) {
                     System.err.println(e.getClass().getSimpleName());
