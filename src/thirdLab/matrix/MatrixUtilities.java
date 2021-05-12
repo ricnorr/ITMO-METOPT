@@ -68,18 +68,17 @@ public class MatrixUtilities {
         int[] ja;
         ia[0] = 0;
         ia[1] = 0;
-        // Количество элементов на i-й строчке/столбце
-        for (int i = 1; i < n; i++) {
-            ia[i + 1] = ia[i] + random.nextInt(Math.min(i + 1, MAX_PROFILE));
-        }
+        di[0] = 0;
         // Добавление внедиагональных элементов
-        for (int i = 0; i < n; i++) {
+        for (int i = 1; i < n; i++) {
             di[i] = 0;
-            int count = ia[i + 1] - ia[i];
+            int count = random.nextInt(Math.min(i + 1, MAX_PROFILE));
             Set<Integer> notNullElements = new TreeSet<>();
             for (int j = 0; j < count; j++) {
                 notNullElements.add(random.nextInt(i));
             }
+            // Количество элементов на i-й строчке/столбце
+            ia[i + 1] = ia[i] + notNullElements.size();
             for (Integer index : notNullElements) {
                 // a[i][index]
                 // идет в сумму a[i][i]
