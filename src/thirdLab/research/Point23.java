@@ -65,7 +65,7 @@ public class Point23 {
         test("matr/point3", findMethodByName("genWriteGilbertSoLE"));
     }
 
-    private static void printRes(int n, int k, double[] x, double[] xk) {
+    public static void printRes(int n, int k, double[] x, double[] xk) {
         double t = MatrixUtilities.dist(x, xk);
         double xm = MatrixUtilities.dist(x, new double[x.length]);
         if (xm != 0) {
