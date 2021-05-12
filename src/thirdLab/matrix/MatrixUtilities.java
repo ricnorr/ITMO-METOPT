@@ -209,8 +209,7 @@ public class MatrixUtilities {
     public static void checkSymmetric(Matrix matrix) {
         for (int i = 0; i < matrix.getColumnNumbers(); i++) {
             for (int j = 0; j < matrix.getColumnNumbers(); j++) {
-                if (!((equals(matrix.getElement(i, j), 0) && equals(matrix.getElement(j, i), 0))
-                        || (!equals(matrix.getElement(i, j), 0) && !equals(matrix.getElement(j, i), 0)))) {
+                if (matrix.getElement(i, j) != matrix.getElement(j , i)) {
                     throw new IllegalStateException();
                 }
             }
@@ -227,7 +226,7 @@ public class MatrixUtilities {
         return res;
     }
 
-    private static double[] generateX(int n) {
+    public static double[] generateX(int n) {
         double[] res = new double[n];
         for (int i = 0; i < n; i++) {
             res[i] = 1 + i;
