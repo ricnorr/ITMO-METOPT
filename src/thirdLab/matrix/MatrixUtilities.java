@@ -111,12 +111,12 @@ public class MatrixUtilities {
         return el[abs(random.nextInt(5))];
     }
 
-    private static double[][] generateAk(int k) {
+    private static Matrix generateAk(int k) {
         if (matrixA != null) {
             matrixA[0][0] = 0;
             matrixA[0][0] = -Arrays.stream(matrixA[0]).sum();
             matrixA[0][0] += Math.pow(0.1, k);
-            return matrixA;
+            return new ProfileMatrix(matrixA);
         }
         int n = randSize();
         matrixA = new double[n][n];
@@ -136,10 +136,10 @@ public class MatrixUtilities {
             matrixA[i][i] = -Arrays.stream(matrixA[i]).sum();
         }
         matrixA[0][0] += Math.pow(0.1, k); // обычно k = 0, но для общего случая пусть так
-        return matrixA;
+        return new ProfileMatrix(matrixA);
     }
 
-    private static double[][] generateGilbert() {
+    private static Matrix generateGilbert() {
         int n = randSize();
         double[][] res = new double[n][n];
         for (int i = 0; i < n; i++) {
@@ -147,7 +147,7 @@ public class MatrixUtilities {
                 res[i][j] = 1.0 / (i + j + 1);
             }
         }
-        return res;
+        return new ProfileMatrix(res);
     }
 
     private static double[] generateX(int n) {
@@ -157,15 +157,6 @@ public class MatrixUtilities {
         }
         return res;
     }
-    /*private static double[] multMatrVect(double[][] m, double[] v) {
-        double [] res = new double[v.length];
-        for (int i = 0; i < res.length; i++) {
-            final double vi = v[i];
-            res[i] = Arrays.stream(m[i]).map(x -> x * vi).sum();
-        }
-        return res;
-    }*/
-
 
     public static double[] multMatrVect(double[][] m, double[] v) {
         double[] res = new double[v.length];
@@ -181,7 +172,9 @@ public class MatrixUtilities {
     public static String vectorToString(double[] v) {
         return Arrays.stream(v).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n"));
     }
-    private static void genWriteSoLE(String fileName, double[][] m) {
+
+    private static void genWriteSoLE(String fileName, Matrix mm) {
+        double[][] m = mm.getMatrix(); //TODO: вместо Matrix принимать и использовать ProfileMatrix
         int n = m.length;
         double[] x = generateX(n);
         double[] f = multMatrVect(m, x);
@@ -203,7 +196,7 @@ public class MatrixUtilities {
         }
     }
     public static void genWriteAkSoLE(String fileName, int k) {
-        genWriteSoLE(fileName, generateAk(k));
+        genWriteSoLE(fileName, generateProfileMatrix(k));
     }
 
     public static void genWriteGilbertSoLE(String fileName, int k) {
