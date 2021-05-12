@@ -21,7 +21,7 @@ public class MatrixUtilities {
     }
 
     private static int bigRandSize() {
-        return 10 + abs(random.nextInt(1000000));
+        return 10 + abs(random.nextInt(100000));
         //return 220;
     }
 
@@ -48,6 +48,14 @@ public class MatrixUtilities {
             matrix[j][j] = random.nextDouble();
         }
         return matrix;
+    }
+
+    public static double len(double[] vect) {
+        double result = 0;
+        for (int i = 0; i < vect.length; i++) {
+            result += vect[i] * vect[i];
+        }
+        return sqrt(result);
     }
 
     /**
@@ -259,6 +267,18 @@ public class MatrixUtilities {
     }
 
 
+
+    public static double[] multMatrVect(Matrix m, double[] v) {
+        double[] res = new double[v.length];
+        for (int i = 0; i < res.length; i++) {
+            for (int j = 0; j < res.length; j++) {
+                res[i] += m.getElement(i, j) * v[j];
+            }
+        }
+        return res;
+    }
+
+
     public static String vectorToString(double[] v) {
         return Arrays.stream(v).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n"));
     }
@@ -334,6 +354,14 @@ public class MatrixUtilities {
 
     public static boolean equals(double a, double b) {
         return Math.abs(a - b) < EPSILON;
+    }
+
+    public static double[] subtract(double[] a, double[] b) {
+        double[] result = new double[a.length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = a[i] - b[i];
+        }
+        return result;
     }
 
 

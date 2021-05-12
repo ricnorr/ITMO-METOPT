@@ -55,7 +55,7 @@ public class ConjugateMethod {
     public double[] solve(SparseMatrix A, double[] f, double epsilon) {
         double[] x0 = new double[f.length];
         x0[0] = 1;
-        MatrixUtilities.checkSymmetric(A);
+        //MatrixUtilities.checkSymmetric(A);
         double[] r0 = subtract(f, A.smartMultiplication(x0));
         double[] z0 = r0;
         for (int k = 1; k < MAX_ITERATIONS; k++) {

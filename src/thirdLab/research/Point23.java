@@ -2,6 +2,7 @@ package thirdLab.research;
 
 import thirdLab.exception.NoExactSolutionException;
 import thirdLab.exception.NoSolutionException;
+import thirdLab.matrix.Matrix;
 import thirdLab.matrix.MatrixUtilities;
 import thirdLab.matrix.ProfileMatrix;
 import thirdLab.matrix.SparseMatrix;
@@ -36,9 +37,11 @@ public class Point23 {
                         }
                         double[] f = MatrixUtilities.readDoubleVector(reader);
                         double[] ans =  MatrixUtilities.readDoubleVector(reader);
-                        //printRes(m.getColumnNumbers(), i, ans, new LUMethod().solve(new ProfileMatrix(m.getMatrix()), f));
-                        //printRes(m.getColumnNumbers(), i, ans, new GaussMethod().solve(new ProfileMatrix(m.getMatrix()), f));
-                         printRes(m.getColumnNumbers(), i, ans, new ConjugateMethod().solve(new SparseMatrix(m.getMatrix()), f, 0.0000000001));
+
+                        double[] Ax = MatrixUtilities.multMatrVect(m, MatrixUtilities.generateX(f.length));
+                        printRes(m.getColumnNumbers(), i, ans, new LUMethod().solve(new ProfileMatrix(m.getMatrix()), f), f, Ax);
+                        printRes(m.getColumnNumbers(), i, ans, new GaussMethod().solve(new ProfileMatrix(m.getMatrix()), f), f, Ax);
+                         printRes(m.getColumnNumbers(), i, ans, new ConjugateMethod().solve(new SparseMatrix(m.getMatrix()), f, 0.0000000001), f, Ax);
                     }
                 } catch (NoSolutionException | NoExactSolutionException e) {
                     System.err.println(e.getClass().getSimpleName());
@@ -65,12 +68,13 @@ public class Point23 {
         test("matr/point3", findMethodByName("genWriteGilbertSoLE"));
     }
 
-    public static void printRes(int n, int k, double[] x, double[] xk) {
+    public static void printRes(int n, int k, double[] x, double[] xk, double[] f, double[] Ax) {
         double t = MatrixUtilities.dist(x, xk);
         double xm = MatrixUtilities.dist(x, new double[x.length]);
         if (xm != 0) {
             xm = t / xm;
         }
-        System.out.println(n + "         " + k + "     " + t + "      " + xm);
+        double fm = MatrixUtilities.dist(f,Ax) / MatrixUtilities.len(f);
+        System.out.println(n + "  &    " + k + "  &   " + t + "   &   " + xm + "   & " + xm /fm);
     }
 }
