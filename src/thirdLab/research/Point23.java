@@ -37,11 +37,8 @@ public class Point23 {
                         }
                         double[] f = MatrixUtilities.readDoubleVector(reader);
                         double[] ans =  MatrixUtilities.readDoubleVector(reader);
-
-                        double[] Ax = MatrixUtilities.multMatrVect(m, MatrixUtilities.generateX(f.length));
-                        printRes(m.getColumnNumbers(), i, ans, new LUMethod().solve(new ProfileMatrix(m.getMatrix()), f), f, Ax, 0);
-                        printRes(m.getColumnNumbers(), i, ans, new GaussMethod().solve(new ProfileMatrix(m.getMatrix()), f), f, Ax, 0);
-                         printRes(m.getColumnNumbers(), i, ans, new ConjugateMethod().solve(new SparseMatrix(m.getMatrix()), f, 0.0000000001), f, Ax, 0);
+                        printRes(m.getColumnNumbers(), i, ans, new LUMethod().solve(new ProfileMatrix(m.getMatrix()), f), 0);
+                        printRes(m.getColumnNumbers(), i, ans, new GaussMethod().solve(new ProfileMatrix(m.getMatrix()), f), 0);
                     }
                 } catch (NoSolutionException | NoExactSolutionException e) {
                     System.err.println(e.getClass().getSimpleName());
@@ -65,16 +62,15 @@ public class Point23 {
     public static void main(String[] args) {
         System.out.println("размерность, k, |x* - xk|, |x* - xk|/|x*|");
         test("matr/point2", findMethodByName("genWriteAkSoLE"));
-        test("matr/point3", findMethodByName("genWriteGilbertSoLE"));
+        //test("matr/point3", findMethodByName("genWriteGilbertSoLE"));
     }
 
-    public static void printRes(int n, int k, double[] x, double[] xk, double[] f, double[] Ax, int iterations) {
+    public static void printRes(int n, int k, double[] x, double[] xk, int iterations) {
         double t = MatrixUtilities.dist(x, xk);
         double xm = MatrixUtilities.dist(x, new double[x.length]);
         if (xm != 0) {
             xm = t / xm;
         }
-        double fm = MatrixUtilities.dist(f,Ax) / MatrixUtilities.len(f);
-        System.out.println(n + "  &    " + iterations + "  &   " + t + "   &   " + xm + "   & " + xm /fm + "\\\\ \\hline");
+        System.out.println(n + "  &    " + k + "  &   " + iterations + "  & " + t + "   &   " + xm + "\\\\ \\hline");
     }
 }

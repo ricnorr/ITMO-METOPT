@@ -11,7 +11,7 @@ public class Point5 {
             double[] x = MatrixUtilities.generateX(sparseMatrix.getColumnNumbers());
             double[] res = sparseMatrix.smartMultiplication(x);
             double[] myRes = new ConjugateMethod().solve(sparseMatrix, res, 0.0000000001);
-            Point23.printRes(sparseMatrix.getColumnNumbers(), i, x, myRes, res, sparseMatrix.smartMultiplication(myRes), ConjugateMethod.lastIterations);
+            Point23.printRes(sparseMatrix.getColumnNumbers(), i, x, myRes, ConjugateMethod.lastIterations);
         }
     }
 }

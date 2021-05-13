@@ -16,7 +16,7 @@ public class MatrixUtilities {
     private static final int MAX_PROFILE = 20;
 
     private static int randSize() {
-        return 10 + abs(random.nextInt(211));
+        return 10 + abs(random.nextInt(991));
         //return 220;
     }
 
