@@ -1,16 +1,9 @@
-package fourthLab.point2;
+package fourthLab.method;
 
-import firstLab.method.BrentMethod;
 import firstLab.method.GoldenRatioMethod;
-import fourthLab.AbstactNewtoneMethod;
-import fourthLab.NewtoneMethod;
 
-import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-
-import static fourthLab.AbstactNewtoneMethod.*;
-import static java.lang.Math.sqrt;
 
 // 1 var
 //метод Давидона-Флетчера-Пауэлла и метод Пауэлла
