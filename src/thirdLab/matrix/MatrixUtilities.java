@@ -17,12 +17,10 @@ public class MatrixUtilities {
 
     private static int randSize() {
         return 10 + abs(random.nextInt(991));
-        //return 220;
     }
 
     private static int bigRandSize() {
         return 10 + abs(random.nextInt(10000));
-        //return 220;
     }
 
     public static double EPSILON = 0.0000000000000000000000000000000000001;
@@ -154,15 +152,10 @@ public class MatrixUtilities {
             di[i] = 0;
             int rowProfile = ia[i + 1] - ia[i];
             int profile = i - rowProfile;
-            // Комменты ниже в основном для меня, чтобы не запутаться. Могу забыть убрать
             for (int p = profile; p < i; p++) {
-                // a[i][p]
-                // идет в сумму a[i][i]
                 double aip = getNotNullAij();
                 alList.add(aip);
                 di[i] -= aip;
-                // a[p][i]
-                // идет в сумму a[p][p]
                 double api = getNotNullAij();
                 auList.add(api);
                 di[p] = api;
@@ -216,7 +209,7 @@ public class MatrixUtilities {
         for (int i = 0; i < n; i++) {
             matrixA[i][i] = -Arrays.stream(matrixA[i]).sum();
         }
-        matrixA[0][0] += Math.pow(0.1, k); // обычно k = 0, но для общего случая пусть так
+        matrixA[0][0] += Math.pow(0.1, k);
         return matrixA;
     }
 
@@ -247,15 +240,6 @@ public class MatrixUtilities {
         }
         return res;
     }
-    /*private static double[] multMatrVect(double[][] m, double[] v) {
-        double [] res = new double[v.length];
-        for (int i = 0; i < res.length; i++) {
-            final double vi = v[i];
-            res[i] = Arrays.stream(m[i]).map(x -> x * vi).sum();
-        }
-        return res;
-    }*/
-
 
     public static double[] multMatrVect(double[][] m, double[] v) {
         double[] res = new double[v.length];
@@ -413,7 +397,6 @@ public class MatrixUtilities {
                     for (int k = 0; k < j; k++) {
                         sum += m.getElement(i, k) * m.getElement(k, j);
                     }
-                    // Не уверен в правильности этой строчки, но нигде информацию не нашел про деление на 0
                     if (equals(m.getElement(j, j), 0)) {
                         m.replace(i, j, 0);
                         continue;
@@ -440,7 +423,6 @@ public class MatrixUtilities {
         return res;
     }
 
-    // Пока StandardMatrix, не учел, что ProfileMatrix не поддерживает несимметричные матрицы
     public static LUMatrix LUDecomposition(Matrix matrix) {
         return new LUMatrix(baseLUDecomposition(matrix));
     }
