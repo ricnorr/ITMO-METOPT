@@ -2,11 +2,8 @@ package thirdLab.research;
 
 import thirdLab.exception.NoExactSolutionException;
 import thirdLab.exception.NoSolutionException;
-import thirdLab.matrix.Matrix;
 import thirdLab.matrix.MatrixUtilities;
 import thirdLab.matrix.ProfileMatrix;
-import thirdLab.matrix.SparseMatrix;
-import thirdLab.method.ConjugateMethod;
 import thirdLab.method.GaussMethod;
 import thirdLab.method.LUMethod;
 
@@ -14,9 +11,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.lang.reflect.Method;
 
 public class Point23 {
     final static int TESTCOUNT = 20;
@@ -37,8 +34,8 @@ public class Point23 {
                         }
                         double[] f = MatrixUtilities.readDoubleVector(reader);
                         double[] ans =  MatrixUtilities.readDoubleVector(reader);
-                        printRes(m.getColumnNumbers(), i, ans, new LUMethod().solve(new ProfileMatrix(m.getMatrix()), f), 0);
-                        printRes(m.getColumnNumbers(), i, ans, new GaussMethod().solve(new ProfileMatrix(m.getMatrix()), f), 0);
+                        printRes(m.getColumnNumbers(), i, ans, new LUMethod().solve(m, f), 0);
+                        //printRes(m.getColumnNumbers(), i, ans, new GaussMethod().solve(m, f), 0);
                     }
                 } catch (NoSolutionException | NoExactSolutionException e) {
                     System.err.println(e.getClass().getSimpleName());
@@ -71,6 +68,6 @@ public class Point23 {
         if (xm != 0) {
             xm = t / xm;
         }
-        System.out.println(n + "  &    " + k + "  &   " + iterations + "  & " + t + "   &   " + xm + "\\\\ \\hline");
+        System.out.println(n + "  &    " + t + "   &   " + xm + "\\\\ \\hline");
     }
 }
