@@ -6,6 +6,9 @@ import thirdLab.matrix.StandardMatrix;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static thirdLab.matrix.MatrixUtilities.*;
+
+
 public class BaseNewtonMethod extends AbstactNewtoneMethod{
     private Matrix H;
 
@@ -23,7 +26,7 @@ public class BaseNewtonMethod extends AbstactNewtoneMethod{
             for (int i = 0; i < x.length; i++) {
                 x[i] += s[i];
             }
-            if (thirdLab.matrix.MatrixUtilities.len(s) <= EPSILON) {
+            if (len(s) <= EPSILON) {
                 break;
             }
         }

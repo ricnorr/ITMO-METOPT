@@ -177,4 +177,15 @@ public abstract class AbstactNewtoneMethod implements NewtoneMethod {
         }
         return result;
     }
+    /**
+     * sum 2 vectors
+     */
+    protected double[] sum(double[] firstVector, double[] secondVector) {
+        assert firstVector.length == secondVector.length;
+        double[] result = new double[firstVector.length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = firstVector[i] + secondVector[i];
+        }
+        return result;
+    }
 }
