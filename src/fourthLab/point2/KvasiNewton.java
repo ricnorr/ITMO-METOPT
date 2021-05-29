@@ -1,6 +1,5 @@
 package fourthLab.point2;
 
-import firstLab.method.BrentMethod;
 import firstLab.method.GoldenRatioMethod;
 
 import java.util.Arrays;
@@ -12,14 +11,11 @@ import static java.lang.Math.sqrt;
 // 1 var
 //метод Давидона-Флетчера-Пауэлла и метод Пауэлла
 
-
-
-
 public class KvasiNewton {
     private static double EPSILON = 0.0000001;
     private static int MAX_ITERATIONS = 2048;
 
-    public double[] run(BiFunction<Integer, double[], Double> derivative, Function<double[], Double> function, double[] point) {
+    public double[] runDavidonFletcherPauell(BiFunction<Integer, double[], Double> derivative, Function<double[], Double> function, double[] point) {
         double[][] Hk = generateI(point.length);
         for (int i = 0; i < MAX_ITERATIONS; i++) {
             double[] way = multMatrix(Hk, point);
@@ -29,7 +25,7 @@ public class KvasiNewton {
             if (length(subtract(newPoint, point)) < EPSILON) {
                 break;
             }
-            Hk = getNextH(Hk, subtract(newPoint, point), subtract(getGradient(derivative, newPoint), getGradient(derivative, point)));
+            Hk = getNextDavidonFLetcherPauellH(Hk, subtract(newPoint, point), subtract(getGradient(derivative, newPoint), getGradient(derivative, point)));
             point = newPoint;
         }
         return point;
@@ -56,8 +52,8 @@ public class KvasiNewton {
     /**
      * Returns next Hk in David-FLitcher-Pauell method
      */
-    public double[][] getNextH(double[][] Hk, double[] sk, double[] yk) {
-        return getNextH(Hk, vectorToMatrix(sk), vectorToMatrix(yk));
+    public double[][] getNextDavidonFLetcherPauellH(double[][] Hk, double[] sk, double[] yk) {
+        return getNextDavidonFLetcherPauellH(Hk, vectorToMatrix(sk), vectorToMatrix(yk));
     }
 
     /**
@@ -74,10 +70,17 @@ public class KvasiNewton {
     /**
      * Returns next Hk in David-FLitcher-Pauell method
      */
-    public double[][] getNextH(double[][] Hk, double[][] sk, double[][] yk) {
+    public double[][] getNextDavidonFLetcherPauellH(double[][] Hk, double[][] sk, double[][] yk) {
         return sumMatrix(
-                subtractMatrix(Hk, divideMatrix(multMatrix(multMatrix(multMatrix(Hk, yk), transpose(yk)), Hk), scalarMult(multMatrix(Hk, yk), yk))),
+                subtractMatrix(
+                        Hk, divideMatrix(multMatrix(multMatrix(multMatrix(Hk, yk), transpose(yk)), Hk), scalarMult(multMatrix(Hk, yk), yk))),
                 divideMatrix(multMatrix(sk, transpose(sk)), scalarMult(yk, sk)));
+    }
+
+    public double[] getNextPauellH(double[][] Hk, double[][] sk, double[][] yk) {
+        subtract(Hk,
+                divideMatrix(multMatrix(sk, transpose(sk))
+        )
     }
 
     /**
