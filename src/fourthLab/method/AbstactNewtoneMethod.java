@@ -1,6 +1,4 @@
-package fourthLab.point2;
-
-import firstLab.method.GoldenRatioMethod;
+package fourthLab.method;
 
 import java.util.Arrays;
 import java.util.function.BiFunction;
@@ -8,27 +6,14 @@ import java.util.function.Function;
 
 import static java.lang.Math.sqrt;
 
-// 1 var
-//метод Давидона-Флетчера-Пауэлла и метод Пауэлла
+public abstract class AbstactNewtoneMethod implements NewtoneMethod {
+    protected static double EPSILON = 0.0000001;
+    protected static int MAX_ITERATIONS = 2048;
+    protected abstract double[] runImpl(BiFunction<Integer, double[], Double> derivative, Function<double[], Double> function, double[] point);
 
-public class KvasiNewton {
-    private static double EPSILON = 0.0000001;
-    private static int MAX_ITERATIONS = 2048;
-
-    public double[] runDavidonFletcherPauell(BiFunction<Integer, double[], Double> derivative, Function<double[], Double> function, double[] point) {
-        double[][] Hk = generateI(point.length);
-        for (int i = 0; i < MAX_ITERATIONS; i++) {
-            double[] way = multMatrix(Hk, point);
-            double[] finalPoint = point;
-            double alpha = new GoldenRatioMethod(x -> function.apply(subtract(finalPoint, multVector(way, x)))).run(-100, 100, EPSILON);
-            double[] newPoint = subtract(point, multVector(way, alpha));
-            if (length(subtract(newPoint, point)) < EPSILON) {
-                break;
-            }
-            Hk = getNextDavidonFLetcherPauellH(Hk, subtract(newPoint, point), subtract(getGradient(derivative, newPoint), getGradient(derivative, point)));
-            point = newPoint;
-        }
-        return point;
+    @Override
+    public double[] run(BiFunction<Integer, double[], Double> derivative, Function<double[], Double> function, double[] point) {
+        return runImpl(derivative, function, point);
     }
 
     /**
@@ -50,13 +35,6 @@ public class KvasiNewton {
     }
 
     /**
-     * Returns next Hk in David-FLitcher-Pauell method
-     */
-    public double[][] getNextDavidonFLetcherPauellH(double[][] Hk, double[] sk, double[] yk) {
-        return getNextDavidonFLetcherPauellH(Hk, vectorToMatrix(sk), vectorToMatrix(yk));
-    }
-
-    /**
      * Generates matrix with 1 on diagonal
      */
     public double[][] generateI(int n) {
@@ -65,22 +43,6 @@ public class KvasiNewton {
             result[i][i] = 1;
         }
         return result;
-    }
-
-    /**
-     * Returns next Hk in David-FLitcher-Pauell method
-     */
-    public double[][] getNextDavidonFLetcherPauellH(double[][] Hk, double[][] sk, double[][] yk) {
-        return sumMatrix(
-                subtractMatrix(
-                        Hk, divideMatrix(multMatrix(multMatrix(multMatrix(Hk, yk), transpose(yk)), Hk), scalarMult(multMatrix(Hk, yk), yk))),
-                divideMatrix(multMatrix(sk, transpose(sk)), scalarMult(yk, sk)));
-    }
-
-    public double[] getNextPauellH(double[][] Hk, double[][] sk, double[][] yk) {
-        subtract(Hk,
-                divideMatrix(multMatrix(sk, transpose(sk))
-        )
     }
 
     /**
@@ -215,5 +177,15 @@ public class KvasiNewton {
         }
         return result;
     }
+    /**
+     * sum 2 vectors
+     */
+    protected double[] sum(double[] firstVector, double[] secondVector) {
+        assert firstVector.length == secondVector.length;
+        double[] result = new double[firstVector.length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = firstVector[i] + secondVector[i];
+        }
+        return result;
+    }
 }
-

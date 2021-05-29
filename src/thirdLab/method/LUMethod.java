@@ -9,7 +9,6 @@ import thirdLab.matrix.StandardMatrix;
 
 public class LUMethod implements MatrixMethod {
     public double[] solve(Matrix m, double[] b) {
-        // Нужна проверка на совпадение размерностей
         LUMatrix LU = MatrixUtilities.LUDecomposition(m);
         return reverseWalk(LU, directWalk(LU, b));
     }
