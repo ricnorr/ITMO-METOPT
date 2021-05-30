@@ -28,6 +28,13 @@ public abstract class AbstactNewtoneMethod implements NewtoneMethod {
     }
 
     /**
+     * Returns antigradient in point
+     */
+    public double[] getAntiGradient(BiFunction<Integer, double[], Double> derivative, double[] point) {
+        return multVector(getGradient(derivative, point), -1);
+    }
+
+    /**
      * Returns length of vector
      */
     public double length(double[] vector) {
@@ -180,7 +187,7 @@ public abstract class AbstactNewtoneMethod implements NewtoneMethod {
     /**
      * sum 2 vectors
      */
-    protected double[] sum(double[] firstVector, double[] secondVector) {
+    protected double[] sumVectors(double[] firstVector, double[] secondVector) {
         assert firstVector.length == secondVector.length;
         double[] result = new double[firstVector.length];
         for (int i = 0; i < result.length; i++) {

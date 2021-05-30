@@ -1,6 +1,5 @@
 package fourthLab.method;
 
-import thirdLab.matrix.Matrix;
 import thirdLab.matrix.StandardMatrix;
 import thirdLab.method.GaussMethod;
 
@@ -20,7 +19,7 @@ public class Markwardt extends AbstactNewtoneMethod {
         for (int i = 0; i < MAX_ITERATIONS; i++) {
             double[] antiGradient = multVector(getGradient(derivative, x), -1);
             double[] s = new GaussMethod().solve(new StandardMatrix(sumMatrix(H, getGI(x.length, gamma))), antiGradient);
-            double[] y = sum(x, s);
+            double[] y = sumVectors(x, s);
             if (function.apply(y) >= function.apply(x)) {
                 gamma /= beta;
                 continue;
