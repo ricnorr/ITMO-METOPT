@@ -1,5 +1,9 @@
 package fourthLab.method;
 
+import fourthLab.research.Test;
+import secondLab.method.DescentGradientMethod;
+
+import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -19,8 +23,8 @@ public class Functions {
 
 
     public static void main(String[] args) {
-        double[] res = new KvasiNewton().runImpl(derivative1, function1, new double[]{0, 0});
-        System.out.println(res[0]);
+        Arrays.stream(new KvasiNewton().run(derivative1, function1, new double[]{2, 2})).forEach(System.out::println);
+        //new DescentGradientMethod().runImpl(function1, )
     }
 
 

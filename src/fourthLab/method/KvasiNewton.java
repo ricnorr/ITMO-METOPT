@@ -1,6 +1,8 @@
 package fourthLab.method;
 
+import firstLab.method.FibonacciMethod;
 import firstLab.method.GoldenRatioMethod;
+import firstLab.method.ParabolaMethod;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -18,7 +20,7 @@ public class KvasiNewton extends AbstactNewtoneMethod {
         double[] w_1 = getAntiGradient(derivative, point);
         double[] p_1 = getAntiGradient(derivative, point);
         double[] finalP_ = p_1;
-        double alpha_1 = new GoldenRatioMethod(alph -> function.apply(sumVectors(point, multVector(finalP_, alph)))).run(-100, 100, EPSILON);
+        double alpha_1 = new GoldenRatioMethod(alph -> function.apply(sumVectors(point, multVector(finalP_, alph)))).run(-1000, 1000, EPSILON);
         double[] x_1 = sumVectors(point, multVector(p_1, alpha_1));
         double[] delta_x_1 = subtract(x_1, point);
 
@@ -27,26 +29,24 @@ public class KvasiNewton extends AbstactNewtoneMethod {
             double[] w_k = getAntiGradient(derivative, x_1);
             double[] delta_w_k = subtract(w_k, w_1);
             double[] v_k = multMatrix(G_1, delta_w_k);
-            double[][] G_k = getNextGDavid(G_1, delta_x_1, delta_w_k, v_k);
+            double[][] G_k = getNextGDavid(G_1, delta_x_1, delta_w_k, v_k); //
             double[] p_k = multMatrix(G_k, w_k);
             double[] finalX_1 = x_1;
-            double[] finalP_1 = p_1;
-            double alpha_k = new GoldenRatioMethod(alph -> function.apply(sumVectors(finalX_1, multVector(finalP_1, alph)))).run(-100, 100, EPSILON);
-            double[] x_k = sumVectors(x_1, multVector(p_1, alpha_1));
+            double alpha_k = new GoldenRatioMethod(alph -> function.apply(sumVectors(finalX_1, multVector(p_k, alph)))).run(-10000, 10000, EPSILON);
+            double[] x_k = sumVectors(x_1, multVector(p_k, alpha_k));
             double[] delta_x_k = subtract(x_k, x_1);
             /////
             if (length(delta_x_k) < EPSILON) {
+                x_1 = x_k;
                 break;
             }
             /////
             w_1 = w_k;
-            p_1 = p_k;
-            alpha_1 = alpha_k;
             x_1 = x_k;
             delta_x_1 = delta_x_k;
             G_1 = G_k;
         }
-        return point;
+        return x_1;
     }
 
     // in pauell mode
@@ -54,37 +54,32 @@ public class KvasiNewton extends AbstactNewtoneMethod {
         double[][] G_1 = generateI(point.length);
         double[] w_1 = getAntiGradient(derivative, point);
         double[] p_1 = getAntiGradient(derivative, point);
-        double[] finalP_ = p_1;
-        double alpha_1 = new GoldenRatioMethod(alph -> function.apply(sumVectors(point, multVector(finalP_, alph)))).run(-100, 100, EPSILON);
+        double alpha_1 = new GoldenRatioMethod(alph -> function.apply(sumVectors(point, multVector(p_1, alph)))).run(-1000, 1000, EPSILON);
         double[] x_1 = sumVectors(point, multVector(p_1, alpha_1));
         double[] delta_x_1 = subtract(x_1, point);
 
         for (int i = 0; i < MAX_ITERATIONS; i++) {
             double[] w_k = getAntiGradient(derivative, x_1);
             double[] delta_w_k = subtract(w_k, w_1);
-            //double[] v_k = multMatrix(G_1, delta_w_k);
-
-            double[] delta_x_k_wave = sumVectors(delta_x_1, multMatrix(G_1, delta_w_k));
-            double[][] G_k = getNextGPauell(G_1, delta_x_k_wave, delta_w_k);
+            double[] delta_x_1_wave = sumVectors(delta_x_1, multMatrix(G_1, delta_w_k));
+            double[][] G_k = getNextGPauell(G_1, delta_x_1_wave, delta_w_k);
             double[] p_k = multMatrix(G_k, w_k);
             double[] finalX_1 = x_1;
-            double[] finalP_1 = p_1;
-            double alpha_k = new GoldenRatioMethod(alph -> function.apply(sumVectors(finalX_1, multVector(finalP_1, alph)))).run(-100, 100, EPSILON);
-            double[] x_k = sumVectors(x_1, multVector(p_1, alpha_1));
+            double alpha_k = new GoldenRatioMethod(alph -> function.apply(sumVectors(finalX_1, multVector(p_k, alph)))).run(-1000, 1000, EPSILON);
+            double[] x_k = sumVectors(x_1, multVector(p_k, alpha_k));
             double[] delta_x_k = subtract(x_k, x_1);
             /////
             if (length(delta_x_k) < EPSILON) {
+                x_1 = x_k;
                 break;
             }
             /////
             w_1 = w_k;
-            p_1 = p_k;
-            alpha_1 = alpha_k;
             x_1 = x_k;
             delta_x_1 = delta_x_k;
             G_1 = G_k;
         }
-        return point;
+        return x_1;
     }
 
 

@@ -7,8 +7,8 @@ import java.util.function.Function;
 import static java.lang.Math.sqrt;
 
 public abstract class AbstactNewtoneMethod implements NewtoneMethod {
-    protected static double EPSILON = 0.0000001;
-    protected static int MAX_ITERATIONS = 2048;
+    protected static double EPSILON = 0.0000000001;
+    protected static int MAX_ITERATIONS = 4096;
     protected abstract double[] runImpl(BiFunction<Integer, double[], Double> derivative, Function<double[], Double> function, double[] point);
 
     @Override
@@ -93,8 +93,10 @@ public abstract class AbstactNewtoneMethod implements NewtoneMethod {
         assert (a[0].length == b.length);
         double[][] result = new double[a.length][b[0].length];
         for (int i = 0; i < a.length; i++) {
-            for (int j = 0; j < a[0].length; j++) {
-                result[i][j] += a[i][j] * b[j][i];
+            for (int j = 0; j < b[0].length; j++) {
+                for (int k = 0; k < a[0].length; k++) {
+                    result[i][j] += a[i][k] * b[k][j];
+                }
             }
         }
         return result;
@@ -110,10 +112,10 @@ public abstract class AbstactNewtoneMethod implements NewtoneMethod {
     /**
      * Mult vector and scalar
      */
-    public double[] multVector(double[] a, double b) {
+    public double[] multVector(double[] a, double b) { //
         double[] result = new double[a.length];
         for (int i = 0; i < a.length; i++) {
-            result[i] += a[i] * b;
+            result[i] = a[i] * b;
         }
         return result;
     }
@@ -176,7 +178,7 @@ public abstract class AbstactNewtoneMethod implements NewtoneMethod {
      * Transpose matrix
      */
     public double[][] transpose(double[][] a) {
-        double[][] result = new double[a.length][a[0].length];
+        double[][] result = new double[a[0].length][a.length];
         for (int i = 0; i < a.length; i++) {
             for (int j = 0; j < a[0].length; j++) {
                 result[j][i] = a[i][j];
