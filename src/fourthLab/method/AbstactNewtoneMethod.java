@@ -12,7 +12,7 @@ public abstract class AbstactNewtoneMethod implements NewtoneMethod {
     protected abstract double[] runImpl(BiFunction<Integer, double[], Double> derivative, Function<double[], Double> function, double[] point);
 
     @Override
-    public double[] run(BiFunction<Integer, double[], Double> derivative, Function<double[], Double> function, double[] point) {
+    public double[] run(final BiFunction<Integer, double[], Double> derivative, final Function<double[], Double> function, final double[] point) {
         return runImpl(derivative, function, point);
     }
 

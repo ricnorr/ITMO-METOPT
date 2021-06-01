@@ -19,7 +19,7 @@ public class BaseNewtonMethod extends AbstactNewtoneMethod{
 
     @Override
     protected double[] runImpl(BiFunction<Integer, double[], Double> derivative, Function<double[], Double> function, double[] point) {
-        double[] s, x = point;
+        double[] s, x = point.clone();
         for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
             double[] gradient = getGradient(derivative, x);
             // s задает направление спуска (наверное)

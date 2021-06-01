@@ -5,13 +5,14 @@ import fourthLab.method.BaseNewtonMethod;
 import fourthLab.method.KvasiNewton;
 import fourthLab.method.Markwardt;
 import fourthLab.method.NewtoneMethod;
+import thirdLab.matrix.Matrix;
+import thirdLab.matrix.StandardMatrix;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 public class Test {
     //copy-pasted from secondLab.Tester
@@ -20,12 +21,17 @@ public class Test {
         return method.run(derivative, function, point);
     }
 
-    public static final Function<double[], Double> func1 = a -> 1.5 * (a[0] - a[1]) * (a[0] - a[1]) + 1.0 / 3 * (a[0] + a[1]) * (a[0] + a[1]);
-    public static final Map<Integer, Function<double[], Double>> derivative1 = Map.of(0, x -> 1.0 / 3 * (11 * x[0] - 7 * x[1]), 1, x -> 1.0 / 3 * (11 * x[1] - 7 * x[0]));
-    public static final String func1String = "1.5*(x-y)^2+0.33*(x + y)^2";
-    public static final double[][] matrix1 = new double[][]{{11.0/3, -7.0/3},{-7.0/3, 11.0/3}};
-    public static final double[] bVector1 = new double[]{0, 0};
+    //f(x) = 100(y − x^2 )^2 + (1 − x)^2
+    public static Function<double[], Double> function1 = x -> Math.pow(100 * (x[1] - x[0]*x[0]), 2) + Math.pow(1 - x[0], 2);
+    public static BiFunction<Integer, double[], Double> derivative1 = (a, b) -> switch (a) {
+        case 0 -> 2 * (200 * Math.pow(b[0], 3) - 200 * b[0] * b[1] + b[0] - 1);
+        case 1 -> 200 * (b[1] - Math.pow(b[0], 2));
+        default -> throw new RuntimeException("No such coord in derivative");
+    };
 
+    public static Matrix gese1 = new StandardMatrix(new double[][]{
+            {1, 2},
+            {3, 4} });
     public static final Function<double[], Double> func2 = a -> a[0] * a[0] + 0.5 * a[1] * a[1] - a[0] * a[1];
     public static final Map<Integer, Function<double[], Double>> derivative2 = Map.of(0, x->2 * x[0] - x[1], 1, x->x[1] - x[0]);
     public static final String func2String = "x^2+0.5*y^2-x*y";
@@ -36,6 +42,11 @@ public class Test {
     public static final Function<double[], Double> func4 = a -> 64 * a[0] * a[0] + 126 * a[0] * a[1] + 64 * a[1] * a[1] + 10 * a[0] + 10 * a[1] - 187;
     public static final String func4String = "64*x*x + 126*x*y + 64*y*y + 10*x + 10*y - 187";
     public static final Map<Integer, Function<double[], Double>> derivative4 = Map.of(0, x -> 128 * x[0] + 126 * x[1] + 10, 1, x -> 126 * x[0] + 128 * x[1] + 10);
+    public static final BiFunction<Integer, double[], Double> derivative4bf = (i, x) -> switch (i) {
+        case 0 -> 128 * x[0] + 126 * x[1] + 10;
+        case 1 -> 126 * x[0] + 128 * x[1] + 10;
+        default -> throw new RuntimeException("No such coord in derivative");
+    };
     public static final double[][] matrix4 = new double[][]{{128, 126},{126, 128}};
     public static final double[] bVector4 = new double[]{10, 10};
     public static final Function<double[], Double> gesseFunc41 = a -> 128d;
@@ -83,9 +94,13 @@ public class Test {
 
     public static final Function<double[], Double> func8 = a -> 5 * a[0] * a[0] - 12 * a[0] * a[1] + 11 * a[1] * a[1] + 6 * a[0] - 13 * a[1] - 131;
     public static final String func8String = "4 + (x1^2 + x2^2)^(1/3)";
-    public static final Map<Integer, Function<double[], Double>> derivative8 = Map.of(
-            0, x -> 10 * x[0] - 12 * x[1] + 6,
-            1, x -> -12 * x[0] + 22 * x[1] - 13);
+    public static final BiFunction<Integer, double[], Double> derivative8 = (i, x) -> switch(i) {
+        case 0 ->
+            10 * x[0] - 12 * x[1] + 6;
+        case 1 ->
+            -12 * x[0] + 22 * x[1] - 13;
+        default -> 0.0;
+    };
     public static final Function<double[], Double> gesseFunc81 = a -> 128d;
     public static final Function<double[], Double> gesseFunc82 = a -> 126d;
     public static final List<List<Function<double[], Double>>> gesseMatrix8 = List.of(
@@ -95,28 +110,25 @@ public class Test {
     public static final Gesse gesse8 = new Gesse(gesseMatrix8);
 
 
-    private static void testFunction(Function<double[], Double> function, Map<Integer, Function<double[], Double>> derivative, double[][] matrix, Gesse H, double[] point) {
+    private static void testFunction(Function<double[], Double> function, BiFunction<Integer, double[], Double> derivative, Gesse H, double[] point) {
         List<NewtoneMethod> methods = new ArrayList<>();
         methods.add(new KvasiNewton());
-        //methods.add(new BaseNewtonMethod(H));
-        //methods.add(new Markwardt(H));
+        methods.add(new BaseNewtonMethod(H));
+        methods.add(new Markwardt(H));
         double[][] res = new double[methods.size()][];
         for (int i = 0; i < methods.size(); i++) {
-            res[i] = new double[0]; //test(methods.get(i), function, derivative, point);
+            res[i] = test(methods.get(i), function, derivative, point);
         }
-        for (int i = 0; i < res.length - 1; i++) {
+        for (int i = 0; i < res.length; i++) {
             System.out.print(methods.get(i).getClass().getSimpleName() + ": ");
             for (double y : res[i]) {
                 System.out.print(y + " ");
             }
             System.out.println();
         }
-        System.out.println("Conjugate gradient");
-        for (double y : res[2]) {
-            System.out.print(y + " ");
-        }
     }
     public static void main(String[] args) {
-
+        //testFunction(func4, derivative4bf, gesse4, new double[]{2, 3});
+        testFunction(func8, derivative8, gesse8, new double[]{2, 3});
     }
 }
