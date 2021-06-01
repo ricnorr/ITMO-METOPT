@@ -1,14 +1,15 @@
 package fourthLab;
 
+import java.util.List;
 import java.util.function.Function;
 
 public class Gesse {
-    private Function<double[], Double>[][] matrix;
-    public Gesse(Function<double[], Double>[][] matrix) {
+    private List<List<Function<double[], Double>>> matrix;
+    public Gesse(List<List<Function<double[], Double>>> matrix) {
         this.matrix = matrix;
     }
     private double evalEl(int i, int j, double[] v) {
-        return matrix[i][j].apply(v);
+        return matrix.get(i).get(j).apply(v);
     }
     public double[][] evaluate(double[] v) {
         final int n = v.length;

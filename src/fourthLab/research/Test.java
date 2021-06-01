@@ -1,5 +1,6 @@
 package fourthLab.research;
 
+import fourthLab.Gesse;
 import fourthLab.method.BaseNewtonMethod;
 import fourthLab.method.KvasiNewton;
 import fourthLab.method.Markwardt;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class Test {
     //copy-pasted from secondLab.Tester
@@ -36,6 +38,13 @@ public class Test {
     public static final Map<Integer, Function<double[], Double>> derivative4 = Map.of(0, x -> 128 * x[0] + 126 * x[1] + 10, 1, x -> 126 * x[0] + 128 * x[1] + 10);
     public static final double[][] matrix4 = new double[][]{{128, 126},{126, 128}};
     public static final double[] bVector4 = new double[]{10, 10};
+    public static final Function<double[], Double> gesseFunc41 = a -> 128d;
+    public static final Function<double[], Double> gesseFunc42 = a -> 126d;
+    public static final List<List<Function<double[], Double>>> gesseMatrix4 = List.of(
+            List.of(gesseFunc41, gesseFunc42),
+            List.of(gesseFunc42, gesseFunc41)
+    );
+    public static final Gesse gesse4 = new Gesse(gesseMatrix4);
 
     // Начальная точка4 5
     public static final Function<double[], Double> func5 = a -> 13 * a[0] * a[0] - 37 * a[0] * a[1] + 70 * a[1] * a[1] + 13 * a[1] - 56;
@@ -59,11 +68,38 @@ public class Test {
             1, x -> 2 * x[1] * Math.exp(-10 * x[0] * x[0] - x[1] * x[1]));
     public static final String func3String = "1-2.7^(-1*(10*x^2+y^2))";
 
-    private static void testFunction(Function<double[], Double> function, Map<Integer, Function<double[], Double>> derivative, double[][] matrix, double[][] H, double[] point) {
+    public static final Function<double[], Double> func7 = a -> 5 * a[0] * a[0] - 12 * a[0] * a[1] + 11 * a[1] * a[1] + 6 * a[0] - 13 * a[1] - 131;
+    public static final String func7String = "-x2*sqrt(x1) + 2*x2^2 + x1 - 14*x2";
+    public static final Map<Integer, Function<double[], Double>> derivative7 = Map.of(
+            0, x -> 10 * x[0] - 12 * x[1] + 6,
+            1, x -> -12 * x[0] + 22 * x[1] - 13);
+    public static final Function<double[], Double> gesseFunc71 = a -> 128d;
+    public static final Function<double[], Double> gesseFunc72 = a -> 126d;
+    public static final List<List<Function<double[], Double>>> gesseMatrix7 = List.of(
+            List.of(gesseFunc71, gesseFunc72),
+            List.of(gesseFunc72, gesseFunc71)
+    );
+    public static final Gesse gesse7 = new Gesse(gesseMatrix7);
+
+    public static final Function<double[], Double> func8 = a -> 5 * a[0] * a[0] - 12 * a[0] * a[1] + 11 * a[1] * a[1] + 6 * a[0] - 13 * a[1] - 131;
+    public static final String func8String = "4 + (x1^2 + x2^2)^(1/3)";
+    public static final Map<Integer, Function<double[], Double>> derivative8 = Map.of(
+            0, x -> 10 * x[0] - 12 * x[1] + 6,
+            1, x -> -12 * x[0] + 22 * x[1] - 13);
+    public static final Function<double[], Double> gesseFunc81 = a -> 128d;
+    public static final Function<double[], Double> gesseFunc82 = a -> 126d;
+    public static final List<List<Function<double[], Double>>> gesseMatrix8 = List.of(
+            List.of(gesseFunc81, gesseFunc82),
+            List.of(gesseFunc82, gesseFunc81)
+    );
+    public static final Gesse gesse8 = new Gesse(gesseMatrix8);
+
+
+    private static void testFunction(Function<double[], Double> function, Map<Integer, Function<double[], Double>> derivative, double[][] matrix, Gesse H, double[] point) {
         List<NewtoneMethod> methods = new ArrayList<>();
         methods.add(new KvasiNewton());
-        methods.add(new BaseNewtonMethod(H));
-        methods.add(new Markwardt(H));
+        //methods.add(new BaseNewtonMethod(H));
+        //methods.add(new Markwardt(H));
         double[][] res = new double[methods.size()][];
         for (int i = 0; i < methods.size(); i++) {
             res[i] = new double[0]; //test(methods.get(i), function, derivative, point);

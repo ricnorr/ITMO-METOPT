@@ -1,5 +1,6 @@
 package fourthLab.method;
 
+import fourthLab.Gesse;
 import thirdLab.matrix.Matrix;
 import thirdLab.matrix.StandardMatrix;
 
@@ -10,10 +11,10 @@ import static thirdLab.matrix.MatrixUtilities.*;
 
 
 public class BaseNewtonMethod extends AbstactNewtoneMethod{
-    private Matrix H;
+    private final Gesse H;
 
-    public BaseNewtonMethod(double[][] H) {
-        this.H = new StandardMatrix(H);
+    public BaseNewtonMethod(Gesse H) {
+        this.H = H;
     }
 
     @Override
@@ -21,7 +22,8 @@ public class BaseNewtonMethod extends AbstactNewtoneMethod{
         double[] s, x = point;
         for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
             double[] gradient = getGradient(derivative, x);
-            s = new thirdLab.method.GaussMethod().solve(H, multVector(gradient, -1));
+            // s задает направление спуска (наверное)
+            s = new thirdLab.method.GaussMethod().solve(new StandardMatrix(H.evaluate(x)), multVector(gradient, -1));
             // Сделать сумму векторов отдельно
             for (int i = 0; i < x.length; i++) {
                 x[i] += s[i];
