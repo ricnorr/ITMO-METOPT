@@ -92,20 +92,22 @@ public class Test {
     );
     public static final Gesse gesse7 = new Gesse(gesseMatrix7);
 
-    public static final Function<double[], Double> func8 = a -> 5 * a[0] * a[0] - 12 * a[0] * a[1] + 11 * a[1] * a[1] + 6 * a[0] - 13 * a[1] - 131;
+    public static final Function<double[], Double> func8 = a -> 4 + Math.pow(a[0] * a[0] + a[1] * a[1], 1d/3);
     public static final String func8String = "4 + (x1^2 + x2^2)^(1/3)";
     public static final BiFunction<Integer, double[], Double> derivative8 = (i, x) -> switch(i) {
         case 0 ->
-            10 * x[0] - 12 * x[1] + 6;
+                (2 * x[0]) / (3 * Math.pow(x[0] * x[0] + x[0] * x[1], 2d/3));
         case 1 ->
-            -12 * x[0] + 22 * x[1] - 13;
+            (2 * x[1]) / (3 * Math.pow(x[0] * x[0] + x[0] * x[1], 2d/3));
         default -> 0.0;
     };
-    public static final Function<double[], Double> gesseFunc81 = a -> 128d;
-    public static final Function<double[], Double> gesseFunc82 = a -> 126d;
+    public static final Function<double[], Double> gesseFunc8dxdx = a -> -(2 * (a[1] * a[1] - 3 * a[0] * a[0])) / (9 * Math.pow(a[0] * a[0] + a[0] * a[1], 5d/3));
+    public static final Function<double[], Double> gesseFunc8dxdy = a -> -(8 * a[0] * a[1]) / (9 * Math.pow(a[0] * a[0] + a[0] * a[1], 5d/3));
+    public static final Function<double[], Double> gesseFunc8dydx = a -> -(8 * a[0] * a[1]) / (9 * Math.pow(a[0] * a[0] + a[0] * a[1], 5d/3));
+    public static final Function<double[], Double> gesseFunc8dydy = a -> -(2 * (a[1] * a[1] - 3 * a[0] * a[0])) / (9 * Math.pow(a[0] * a[0] + a[0] * a[1], 5d/3));
     public static final List<List<Function<double[], Double>>> gesseMatrix8 = List.of(
-            List.of(gesseFunc81, gesseFunc82),
-            List.of(gesseFunc82, gesseFunc81)
+            List.of(gesseFunc8dxdx, gesseFunc8dxdy),
+            List.of(gesseFunc8dydx, gesseFunc8dydy)
     );
     public static final Gesse gesse8 = new Gesse(gesseMatrix8);
 
