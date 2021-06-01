@@ -120,6 +120,14 @@ public abstract class AbstactNewtoneMethod implements NewtoneMethod {
         return result;
     }
 
+    public double multVectors(double[] a, double[] b) {
+        double result = 0;
+        for (int i = 0; i < a.length; i++) {
+            result += a[i] * b[i];
+        }
+        return result;
+    }
+
     /**
      * Divides matrix on constant
      */

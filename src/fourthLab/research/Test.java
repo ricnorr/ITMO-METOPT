@@ -1,10 +1,9 @@
 package fourthLab.research;
 
 import fourthLab.Gesse;
-import fourthLab.method.BaseNewtonMethod;
-import fourthLab.method.KvasiNewton;
-import fourthLab.method.Markwardt;
-import fourthLab.method.NewtoneMethod;
+import fourthLab.method.*;
+import thirdLab.exception.NoExactSolutionException;
+import thirdLab.exception.NoSolutionException;
 import thirdLab.matrix.Matrix;
 import thirdLab.matrix.StandardMatrix;
 
@@ -92,19 +91,22 @@ public class Test {
     );
     public static final Gesse gesse7 = new Gesse(gesseMatrix7);
 
+    /**
+     * Данную функцию по теоретическим причинам не может решить базовый метод Ньютона
+     */
     public static final Function<double[], Double> func8 = a -> 4 + Math.pow(a[0] * a[0] + a[1] * a[1], 1d/3);
     public static final String func8String = "4 + (x1^2 + x2^2)^(1/3)";
     public static final BiFunction<Integer, double[], Double> derivative8 = (i, x) -> switch(i) {
         case 0 ->
-                (2 * x[0]) / (3 * Math.pow(x[0] * x[0] + x[0] * x[1], 2d/3));
+                (2 * x[0]) / (3 * Math.pow(x[0] * x[0] + x[1] * x[1], 2d/3));
         case 1 ->
-            (2 * x[1]) / (3 * Math.pow(x[0] * x[0] + x[0] * x[1], 2d/3));
+            (2 * x[1]) / (3 * Math.pow(x[0] * x[0] + x[1] * x[1], 2d/3));
         default -> 0.0;
     };
-    public static final Function<double[], Double> gesseFunc8dxdx = a -> -(2 * (a[1] * a[1] - 3 * a[0] * a[0])) / (9 * Math.pow(a[0] * a[0] + a[0] * a[1], 5d/3));
-    public static final Function<double[], Double> gesseFunc8dxdy = a -> -(8 * a[0] * a[1]) / (9 * Math.pow(a[0] * a[0] + a[0] * a[1], 5d/3));
-    public static final Function<double[], Double> gesseFunc8dydx = a -> -(8 * a[0] * a[1]) / (9 * Math.pow(a[0] * a[0] + a[0] * a[1], 5d/3));
-    public static final Function<double[], Double> gesseFunc8dydy = a -> -(2 * (a[1] * a[1] - 3 * a[0] * a[0])) / (9 * Math.pow(a[0] * a[0] + a[0] * a[1], 5d/3));
+    public static final Function<double[], Double> gesseFunc8dxdx = a -> -(2 * (a[0] * a[0] - 3 * a[1] * a[1])) / (9 * Math.pow(a[0] * a[0] + a[1] * a[1], 5d/3));
+    public static final Function<double[], Double> gesseFunc8dxdy = a -> -(8 * a[0] * a[1]) / (9 * Math.pow(a[0] * a[0] + a[1] * a[1], 5d/3));
+    public static final Function<double[], Double> gesseFunc8dydx = a -> -(8 * a[0] * a[1]) / (9 * Math.pow(a[0] * a[0] + a[1] * a[1], 5d/3));
+    public static final Function<double[], Double> gesseFunc8dydy = a -> -(2 * (a[1] * a[1] - 3 * a[0] * a[0])) / (9 * Math.pow(a[0] * a[0] + a[1] * a[1], 5d/3));
     public static final List<List<Function<double[], Double>>> gesseMatrix8 = List.of(
             List.of(gesseFunc8dxdx, gesseFunc8dxdy),
             List.of(gesseFunc8dydx, gesseFunc8dydy)
@@ -112,14 +114,22 @@ public class Test {
     public static final Gesse gesse8 = new Gesse(gesseMatrix8);
 
 
+
     private static void testFunction(Function<double[], Double> function, BiFunction<Integer, double[], Double> derivative, Gesse H, double[] point) {
         List<NewtoneMethod> methods = new ArrayList<>();
         methods.add(new KvasiNewton());
         methods.add(new BaseNewtonMethod(H));
+        methods.add(new OneDimMinNewtonMethod(H));
         methods.add(new Markwardt(H));
+        methods.add(new CoolNewtonMethod(H));
         double[][] res = new double[methods.size()][];
         for (int i = 0; i < methods.size(); i++) {
-            res[i] = test(methods.get(i), function, derivative, point);
+            res[i] = new double[]{0};
+            try {
+                res[i] = test(methods.get(i), function, derivative, point);
+            } catch (NoSolutionException | NoExactSolutionException e) {
+                System.out.println(methods.get(i).getClass().getSimpleName() + " can't solve this");
+            }
         }
         for (int i = 0; i < res.length; i++) {
             System.out.print(methods.get(i).getClass().getSimpleName() + ": ");
