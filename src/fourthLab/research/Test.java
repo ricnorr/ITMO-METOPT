@@ -179,9 +179,7 @@ public class Test {
                 res += 200;
             }
         } else if (j == i + 1) {
-            if (i < x.length - 1) {
-                res += -400 * x[i];
-            }
+            res += -400 * x[i];
         } else if (j == i - 1) {
             res += -400 * x[i - 1];
         }
@@ -224,7 +222,7 @@ public class Test {
         testFunction(rozenbrok, new MarkwardtGradient(rozDerivative), rozgesse, rozpoint);
     }
 
-    private static class Pair {
+    public static class Pair {
         public final int i, j;
 
         public Pair(int i, int j) {

@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 public class Hesse {
     protected List<List<Function<double[], Double>>> matrix;
+    public Hesse() {}
     public Hesse(List<List<Function<double[], Double>>> matrix) {
         this.matrix = matrix;
     }
