@@ -2,7 +2,6 @@ package fourthLab.method;
 
 import fourthLab.derivative.Gradient;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public interface NewtoneMethod {

@@ -5,7 +5,6 @@ import fourthLab.derivative.Gradient;
 import fourthLab.hesse.Hesse;
 import thirdLab.matrix.StandardMatrix;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static thirdLab.matrix.MatrixUtilities.len;

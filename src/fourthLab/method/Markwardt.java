@@ -5,12 +5,11 @@ import fourthLab.hesse.Hesse;
 import thirdLab.matrix.StandardMatrix;
 import thirdLab.method.GaussMethod;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class Markwardt extends AbstactNewtoneMethod {
     private static final boolean isHolecky = true;
-    private Hesse H;
+    private final Hesse H;
 
     public Markwardt(Hesse H) {
         this.H = H;

@@ -3,7 +3,6 @@ package fourthLab.method;
 import fourthLab.derivative.Gradient;
 
 import java.util.Arrays;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static java.lang.Math.sqrt;
