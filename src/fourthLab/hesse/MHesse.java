@@ -11,8 +11,8 @@ public class MHesse extends Hesse {
     public double[][] evaluate(double[] v) {
         final int n = v.length;
         double[][] res = new double[n][n];
-        res[0][0] = evalEl(0, 0, new double[0]);
-        res[0][1] = evalEl(0, 1, new double[]{v[0], v[1]});
+        res[0][0] = evalEl(0, 0, new double[]{v[0], v[1], v[2]});
+        res[0][1] = evalEl(0, 1, new double[]{v[0], v[1], v[2]});
         res[0][2] = evalEl(0, 2, new double[]{v[0], v[1], v[2]});
 
         for (int i = 1; i < n - 1; i++) {
