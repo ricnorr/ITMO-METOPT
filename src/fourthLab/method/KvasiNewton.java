@@ -3,10 +3,7 @@ package fourthLab.method;
 import firstLab.method.BrentMethod;
 import firstLab.method.FibonacciMethod;
 import firstLab.method.GoldenRatioMethod;
-import firstLab.method.ParabolaMethod;
-import fourthLab.derivative.Gradient;
 
-import java.lang.reflect.Method;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -83,7 +80,7 @@ public class KvasiNewton extends AbstactNewtoneMethod {
         }
         System.out.println();*/
 
-        for (int i = 0; i < 150; i++)   {
+        for (int i = 0; i < 150; i++) {
             double[] w_k = getAntiGradient(derivative, x_1);
             double[] delta_w_k = subtract(w_k, w_1);
             double[] v_k = multMatrix(G_1, delta_w_k);
@@ -92,7 +89,7 @@ public class KvasiNewton extends AbstactNewtoneMethod {
             double[] finalX_1 = x_1;
             double alpha_k = new GoldenRatioMethod(alph -> function.apply(sumVectors(finalX_1, multVector(p_k, alph)))).run(-1, 1, 0.000000000000000000000000000001);
             double[] x_k = sumVectors(x_1, multVector(p_k, alpha_k));
-            mx = Math.max(mx, length(subtract(new double[]{1.27,1.72}, x_k)) / length(subtract(new double[]{1.27,1.72}, x_1)));
+            mx = Math.max(mx, length(subtract(new double[]{1.27, 1.72}, x_k)) / length(subtract(new double[]{1.27, 1.72}, x_1)));
             double[] delta_x_k = subtract(x_k, x_1);
             if (length(delta_x_k) < 0.0000001) {
                 x_1 = x_k;
@@ -160,6 +157,14 @@ public class KvasiNewton extends AbstactNewtoneMethod {
         return x_1;
     }
 
+    private double[] getAntiGradient(BiFunction<Integer, double[], Double> derivative, double[] point) {
+        double[] result = new double[point.length];
+        for (int i = 0; i < point.length; i++) {
+            result[i] = -derivative.apply(i, point);
+        }
+        return result;
+    }
+
 
     public double[] runPauellPrintKoeffc(BiFunction<Integer, double[], Double> derivative, Function<double[], Double> function, double[] point, double[] ans) {
         double[][] G_1 = generateI(point.length);
@@ -202,24 +207,21 @@ public class KvasiNewton extends AbstactNewtoneMethod {
     }
 
 
-
-    
     public double[][] getNextGPauell(double[][] G, double[] delta_x_k, double[] delta_w_k) {
         return getNextGPauell(G, vectorToMatrix(delta_x_k), vectorToMatrix(delta_w_k));
     }
 
     public double[][] getNextGPauell(double[][] G, double[][] delta_x_k, double[][] delta_w_k) {
-       return subtractMatrix(
-         G,
-         divideMatrix(
-                 multMatrix(delta_x_k, transpose(delta_x_k)),
-                 scalarMult(delta_w_k, delta_x_k)
-         )      
-       );
+        return subtractMatrix(
+                G,
+                divideMatrix(
+                        multMatrix(delta_x_k, transpose(delta_x_k)),
+                        scalarMult(delta_w_k, delta_x_k)
+                )
+        );
     }
-    
-    
-    
+
+
     /**
      * Returns next Hk in David-FLitcher-Pauell method
      */
