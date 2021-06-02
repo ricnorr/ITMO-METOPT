@@ -4,6 +4,7 @@ import firstLab.method.BrentMethod;
 import firstLab.method.FibonacciMethod;
 import firstLab.method.GoldenRatioMethod;
 import firstLab.method.ParabolaMethod;
+import fourthLab.derivative.Gradient;
 
 import java.lang.reflect.Method;
 import java.util.function.BiFunction;
@@ -18,8 +19,8 @@ public class KvasiNewton extends AbstactNewtoneMethod {
     // in david fletcher mode
     public double[] runImplPrintKoef(BiFunction<Integer, double[], Double> derivative, Function<double[], Double> function, double[] point, double[] ans) {
         double[][] G_1 = generateI(point.length);
-        double[] w_1 = getAntiGradient(derivative, point);
-        double[] p_1 = getAntiGradient(derivative, point);
+        double[] w_1 = gr.getAntiGradient(point);
+        double[] p_1 = gr.getAntiGradient(point);
         double[] finalP_ = p_1;
         double alpha_1 = new FibonacciMethod(alph -> function.apply(sumVectors(point, multVector(finalP_, alph)))).run(0, 2, 0.0000000000000000000000000000001);
         double[] x_1 = sumVectors(point, multVector(p_1, alpha_1));
