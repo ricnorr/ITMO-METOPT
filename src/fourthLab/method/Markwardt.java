@@ -2,14 +2,27 @@ package fourthLab.method;
 
 import fourthLab.derivative.Gradient;
 import fourthLab.hesse.Hesse;
+import secondLab.method.ConjugateGradientMethod;
+import secondLab.method.GradientMethod;
+import thirdLab.exception.NoExactSolutionException;
+import thirdLab.exception.NoSolutionException;
 import thirdLab.matrix.StandardMatrix;
+import thirdLab.method.ConjugateMethod;
 import thirdLab.method.GaussMethod;
+import thirdLab.method.LUMethod;
+import thirdLab.method.MatrixMethod;
 
+import java.util.List;
 import java.util.function.Function;
 
 public class Markwardt extends AbstactNewtoneMethod {
     private static final boolean isHolecky = true;
     private final Hesse H;
+    private static final List<MatrixMethod> methods = List.of(
+            new GaussMethod(),
+            new LUMethod(),
+            new ConjugateMethod()
+    );
 
     public Markwardt(Hesse H) {
         this.H = H;
@@ -37,7 +50,16 @@ public class Markwardt extends AbstactNewtoneMethod {
                     System.out.println("f = 100");
                 }
             }
-            double[] s = new GaussMethod().solve(new StandardMatrix(m), antiGradient);
+            double[] s = new double[0];
+            for (MatrixMethod method : methods) {
+                try {
+                    s = method.solve(new StandardMatrix(m), antiGradient);
+                    break;
+                } catch (NoExactSolutionException ignored) {}
+            }
+            if (s.length == 0) {
+                throw new NoSolutionException();
+            }
             double[] y = sumVectors(x, s);
             if (function.apply(y) > function.apply(x)) {
                 tau /= beta;

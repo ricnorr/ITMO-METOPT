@@ -1,10 +1,12 @@
 package thirdLab.method;
 
+import thirdLab.matrix.Matrix;
+import thirdLab.matrix.MatrixUtilities;
 import thirdLab.matrix.SparseMatrix;
 
 import java.util.Arrays;
 
-public class ConjugateMethod {
+public class ConjugateMethod implements MatrixMethod {
 
     private static int MAX_ITERATIONS = 3000;
     public static int lastIterations;
@@ -88,5 +90,10 @@ public class ConjugateMethod {
         for (double x : f) {
             System.out.println(x);
         }
+    }
+
+    @Override
+    public double[] solve(Matrix matrix, double[] f) {
+        return solve(new SparseMatrix(matrix.getMatrix()), f, MatrixUtilities.EPSILON);
     }
 }

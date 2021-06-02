@@ -14,6 +14,7 @@ import thirdLab.matrix.StandardMatrix;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -146,12 +147,13 @@ public class Test {
     ));
 
     private static void testFunction(Function<double[], Double> function, Gradient gradient, Hesse H, double[] point) {
-        List<NewtoneMethod> methods = new ArrayList<>();
-        methods.add(new KvasiNewton());
-        methods.add(new BaseNewtonMethod(H));
-        methods.add(new OneDimMinNewtonMethod(H));
-        methods.add(new Markwardt(H));
-        methods.add(new CoolNewtonMethod(H));
+        List<NewtoneMethod> methods = List.of(
+        new Markwardt(H),
+        new KvasiNewton(),
+        new BaseNewtonMethod(H),
+        new OneDimMinNewtonMethod(H),
+        new CoolNewtonMethod(H)
+        );
         double[][] res = new double[methods.size()][];
         for (int i = 0; i < methods.size(); i++) {
             res[i] = new double[]{0};
@@ -170,8 +172,13 @@ public class Test {
         }
     }
     public static void main(String[] args) {
-        testFunction(func4, new NormalGradient(derivative4bf), HESSE_4, new double[]{2, 3});
-        testFunction(func8, new NormalGradient(derivative8), HESSE_8, new double[]{2, 3});
-        //testFunction(rozenbrok, new MarkwardtGradient(rozDerivative), rozgesse, new double[100]);
+        //testFunction(func4, new NormalGradient(derivative4bf), HESSE_4, new double[]{2, 3});
+        //testFunction(func8, new NormalGradient(derivative8), HESSE_8, new double[]{2, 3});
+        double[] rozpoint = new double[100];
+        Random r = new Random();
+        for (int i = 0; i < 100; i++) {
+            rozpoint[i] = r.nextFloat() % 15;
+        }
+        testFunction(rozenbrok, new MarkwardtGradient(rozDerivative), rozgesse, rozpoint);
     }
 }
