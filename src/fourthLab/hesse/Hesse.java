@@ -1,14 +1,14 @@
-package fourthLab;
+package fourthLab.hesse;
 
 import java.util.List;
 import java.util.function.Function;
 
-public class Gesse {
-    private List<List<Function<double[], Double>>> matrix;
-    public Gesse(List<List<Function<double[], Double>>> matrix) {
+public class Hesse {
+    protected List<List<Function<double[], Double>>> matrix;
+    public Hesse(List<List<Function<double[], Double>>> matrix) {
         this.matrix = matrix;
     }
-    private double evalEl(int i, int j, double[] v) {
+    protected double evalEl(int i, int j, double[] v) {
         return matrix.get(i).get(j).apply(v);
     }
     public double[][] evaluate(double[] v) {

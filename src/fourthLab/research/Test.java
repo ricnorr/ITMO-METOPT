@@ -1,6 +1,10 @@
 package fourthLab.research;
 
-import fourthLab.Gesse;
+import fourthLab.derivative.Gradient;
+import fourthLab.derivative.MarkwardtGradient;
+import fourthLab.derivative.NormalGradient;
+import fourthLab.hesse.Hesse;
+import fourthLab.hesse.MHesse;
 import fourthLab.method.*;
 import thirdLab.exception.NoExactSolutionException;
 import thirdLab.exception.NoSolutionException;
@@ -16,8 +20,8 @@ import java.util.function.Function;
 public class Test {
     //copy-pasted from secondLab.Tester
     //need to be refactored
-    private static double[] test(NewtoneMethod method, Function<double[], Double> function, BiFunction<Integer, double[], Double> derivative, double[] point) {
-        return method.run(derivative, function, point);
+    private static double[] test(NewtoneMethod method, Function<double[], Double> function, Gradient gradient, double[] point) {
+        return method.run(gradient, function, point);
     }
 
     //f(x) = 100(y − x^2 )^2 + (1 − x)^2
@@ -54,7 +58,7 @@ public class Test {
             List.of(gesseFunc41, gesseFunc42),
             List.of(gesseFunc42, gesseFunc41)
     );
-    public static final Gesse gesse4 = new Gesse(gesseMatrix4);
+    public static final Hesse HESSE_4 = new Hesse(gesseMatrix4);
 
     // Начальная точка4 5
     public static final Function<double[], Double> func5 = a -> 13 * a[0] * a[0] - 37 * a[0] * a[1] + 70 * a[1] * a[1] + 13 * a[1] - 56;
@@ -89,7 +93,7 @@ public class Test {
             List.of(gesseFunc71, gesseFunc72),
             List.of(gesseFunc72, gesseFunc71)
     );
-    public static final Gesse gesse7 = new Gesse(gesseMatrix7);
+    public static final Hesse HESSE_7 = new Hesse(gesseMatrix7);
 
     /**
      * Данную функцию по теоретическим причинам не может решить базовый метод Ньютона
@@ -111,11 +115,37 @@ public class Test {
             List.of(gesseFunc8dxdx, gesseFunc8dxdy),
             List.of(gesseFunc8dydx, gesseFunc8dydy)
     );
-    public static final Gesse gesse8 = new Gesse(gesseMatrix8);
+    public static final Hesse HESSE_8 = new Hesse(gesseMatrix8);
 
+    private static double sqr(double a) {
+        return a * a;
+    }
+    private static final Function<double[], Double> rozenbrok = v -> {
+        double res = 0;
+        for (int i = 0; i < v.length - 1; i++) {
+            res += 100*sqr(v[i] - sqr(v[i + 1])) + sqr(1 - v[i]);
+        }
+        return res;
+    };
+    public static final BiFunction<Integer, double[], Double> rozDerivative = (i, v) -> switch(i) {
+        case 0 -> 202 * v[0] - 200 * sqr(v[1]) - 2;
+        case 1 -> (202 - 400 * v[0]) * v[1] + 400 * v[1] * sqr(v[1]) - 200 * sqr(v[2]) - 2;
+        case 2 -> 400 * v[2] * (sqr(v[2]) - v[1]);
+        default -> throw new IllegalStateException("Unexpected value: " + i);
+    };
+    public static final Function<double[], Double> rozdada = v -> 202d;
+    public static final Function<double[], Double> rozdadb = v -> -400 * v[1];
+    public static final Function<double[], Double> rozdadc = v -> 0d;
+    public static final Function<double[], Double> rozdbdb = v -> 400 * (3 * sqr(v[1]) - v[0]) + 202;
+    public static final Function<double[], Double> rozdbdc = v -> -400 * v[2];
+    public static final Function<double[], Double> rozdcdc = v -> 400 * (3*sqr(v[2]) - v[1]);
+    public static final MHesse rozgesse = new MHesse(List.of(
+            List.of(rozdada, rozdadb, rozdadc),
+            List.of(rozdbdb, rozdbdc),
+            List.of(rozdcdc)
+    ));
 
-
-    private static void testFunction(Function<double[], Double> function, BiFunction<Integer, double[], Double> derivative, Gesse H, double[] point) {
+    private static void testFunction(Function<double[], Double> function, Gradient gradient, Hesse H, double[] point) {
         List<NewtoneMethod> methods = new ArrayList<>();
         methods.add(new KvasiNewton());
         methods.add(new BaseNewtonMethod(H));
@@ -126,7 +156,7 @@ public class Test {
         for (int i = 0; i < methods.size(); i++) {
             res[i] = new double[]{0};
             try {
-                res[i] = test(methods.get(i), function, derivative, point);
+                res[i] = test(methods.get(i), function, gradient, point);
             } catch (NoSolutionException | NoExactSolutionException e) {
                 System.out.println(methods.get(i).getClass().getSimpleName() + " can't solve this");
             }
@@ -140,7 +170,8 @@ public class Test {
         }
     }
     public static void main(String[] args) {
-        //testFunction(func4, derivative4bf, gesse4, new double[]{2, 3});
-        testFunction(func8, derivative8, gesse8, new double[]{2, 3});
+        testFunction(func4, new NormalGradient(derivative4bf), HESSE_4, new double[]{2, 3});
+        testFunction(func8, new NormalGradient(derivative8), HESSE_8, new double[]{2, 3});
+        //testFunction(rozenbrok, new MarkwardtGradient(rozDerivative), rozgesse, new double[100]);
     }
 }

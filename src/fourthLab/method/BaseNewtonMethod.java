@@ -1,9 +1,9 @@
 package fourthLab.method;
 
-import fourthLab.Gesse;
+import fourthLab.derivative.Gradient;
+import fourthLab.hesse.Hesse;
 import thirdLab.exception.NoExactSolutionException;
 import thirdLab.exception.NoSolutionException;
-import thirdLab.matrix.Matrix;
 import thirdLab.matrix.StandardMatrix;
 
 import java.util.function.BiFunction;
@@ -13,22 +13,21 @@ import static thirdLab.matrix.MatrixUtilities.*;
 
 
 public class BaseNewtonMethod extends AbstactNewtoneMethod{
-    private final Gesse H;
+    private final Hesse H;
 
-    public BaseNewtonMethod(Gesse H) {
+    public BaseNewtonMethod(Hesse H) {
         this.H = H;
     }
 
     @Override
-    protected double[] runImpl(BiFunction<Integer, double[], Double> derivative,
+    protected double[] runImpl(Gradient gradient,
                                Function<double[], Double> function,
                                double[] point) throws NoExactSolutionException, NoSolutionException {
         double[] s, x = point.clone();
         for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
-            double[] gradient = getGradient(derivative, x);
             // s задает направление спуска (наверное)
             try {
-                s = new thirdLab.method.GaussMethod().solve(new StandardMatrix(H.evaluate(x)), multVector(gradient, -1));
+                s = new thirdLab.method.GaussMethod().solve(new StandardMatrix(H.evaluate(x)), multVector(gradient.getGradient(x), -1));
             } catch (NoSolutionException | NoExactSolutionException e) {
                 throw e;
             }

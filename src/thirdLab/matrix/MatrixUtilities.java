@@ -50,8 +50,8 @@ public class MatrixUtilities {
 
     public static double len(double[] vect) {
         double result = 0;
-        for (int i = 0; i < vect.length; i++) {
-            result += vect[i] * vect[i];
+        for (double v : vect) {
+            result += v * v;
         }
         return sqrt(result);
     }
@@ -425,5 +425,12 @@ public class MatrixUtilities {
 
     public static LUMatrix LUDecomposition(Matrix matrix) {
         return new LUMatrix(baseLUDecomposition(matrix));
+    }
+    public static double[] multVector(double[] a, double b) {
+        double[] result = new double[a.length];
+        for (int i = 0; i < a.length; i++) {
+            result[i] = a[i] * b;
+        }
+        return result;
     }
 }

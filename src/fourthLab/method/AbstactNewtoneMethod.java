@@ -1,5 +1,7 @@
 package fourthLab.method;
 
+import fourthLab.derivative.Gradient;
+
 import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -9,29 +11,11 @@ import static java.lang.Math.sqrt;
 public abstract class AbstactNewtoneMethod implements NewtoneMethod {
     protected static double EPSILON = 0.0000000001;
     protected static int MAX_ITERATIONS = 4096;
-    protected abstract double[] runImpl(BiFunction<Integer, double[], Double> derivative, Function<double[], Double> function, double[] point);
+    protected abstract double[] runImpl(Gradient gradient, Function<double[], Double> function, double[] point);
 
     @Override
-    public double[] run(final BiFunction<Integer, double[], Double> derivative, final Function<double[], Double> function, final double[] point) {
-        return runImpl(derivative, function, point);
-    }
-
-    /**
-     * Returns gradient in point
-     */
-    public double[] getGradient(BiFunction<Integer, double[], Double> derivative, double[] point) {
-        double[] gradient = new double[point.length];
-        for (int i = 0; i < gradient.length; i++) {
-            gradient[i] = derivative.apply(i, point);
-        }
-        return gradient;
-    }
-
-    /**
-     * Returns antigradient in point
-     */
-    public double[] getAntiGradient(BiFunction<Integer, double[], Double> derivative, double[] point) {
-        return multVector(getGradient(derivative, point), -1);
+    public double[] run(final Gradient gradient, final Function<double[], Double> function, final double[] point) {
+        return runImpl(gradient, function, point);
     }
 
     /**
