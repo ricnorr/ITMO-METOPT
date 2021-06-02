@@ -18,7 +18,7 @@ public class CoolNewtonMethod extends AbstactNewtoneMethod{
 
     @Override
     protected double[] runImpl(Gradient gradient, Function<double[], Double> function, double[] point) {
-        double[] s, d, x = point;
+        double[] s, d, x = point.clone();
         d = multVector(gradient.getGradient(x), -1);
         s = multVector(d, findArgMinGolden(x, d, function));
         x = sumVectors(x, s);

@@ -2,6 +2,7 @@ package fourthLab.research;
 
 import fourthLab.derivative.Gradient;
 import fourthLab.derivative.MarkwardtGradient;
+import fourthLab.derivative.NormalGradient;
 import fourthLab.hesse.Hesse;
 import fourthLab.hesse.MHesse;
 import fourthLab.method.*;
@@ -81,16 +82,19 @@ public class Test {
             1, x -> 2 * x[1] * Math.exp(-10 * x[0] * x[0] - x[1] * x[1]));
     public static final String func3String = "1-2.7^(-1*(10*x^2+y^2))";
 
-    public static final Function<double[], Double> func7 = a -> 5 * a[0] * a[0] - 12 * a[0] * a[1] + 11 * a[1] * a[1] + 6 * a[0] - 13 * a[1] - 131;
-    public static final String func7String = "-x2*sqrt(x1) + 2*x2^2 + x1 - 14*x2";
-    public static final Map<Integer, Function<double[], Double>> derivative7 = Map.of(
-            0, x -> 10 * x[0] - 12 * x[1] + 6,
-            1, x -> -12 * x[0] + 22 * x[1] - 13);
-    public static final Function<double[], Double> gesseFunc71 = a -> 128d;
-    public static final Function<double[], Double> gesseFunc72 = a -> 126d;
+    public static final Function<double[], Double> func7 = a -> -a[1] * Math.pow(a[0], 1d/5) + 2 * a[1] * a[1] + a[0] - 14 * a[1];
+    public static final String func7String = "-x2*x1^(1/5) + 2*x2^2 + x1 - 14*x2";
+    public static final BiFunction<Integer, double[], Double> derivative7 = (i, x) -> switch(i) {
+        case 0 -> 1 - x[1] / (5 * Math.pow(x[0], 4d/5));
+        case 1 -> -Math.pow(x[0], 1d/5) + 4 * x[1] - 14;
+        default -> 0d;
+    };
+    public static final Function<double[], Double> gesseFunc7dxdx = a -> (4 * a[1]) / (25 * Math.pow(a[0], 9d/5));
+    public static final Function<double[], Double> gesseFunc7dxdy = a -> -1 / (5 * Math.pow(a[0], 4d/5));
+    public static final Function<double[], Double> gesseFunc7dydy = a -> 4d;
     public static final List<List<Function<double[], Double>>> gesseMatrix7 = List.of(
-            List.of(gesseFunc71, gesseFunc72),
-            List.of(gesseFunc72, gesseFunc71)
+            List.of(gesseFunc7dxdx, gesseFunc7dxdy),
+            List.of(gesseFunc7dxdy, gesseFunc7dydy)
     );
     public static final Hesse HESSE_7 = new Hesse(gesseMatrix7);
 
@@ -135,7 +139,7 @@ public class Test {
     };*/
 
     /**
-     * Производная будет зависеть от длины ч
+     * Производная будет зависеть от длины x
      */
     public static final BiFunction<Integer, double[], Double> rozDerivative = (i, x) -> {
         if (i < 0 || i >= x.length) {
@@ -214,12 +218,13 @@ public class Test {
     public static void main(String[] args) {
         //testFunction(func4, new NormalGradient(derivative4bf), HESSE_4, new double[]{2, 3});
         //testFunction(func8, new NormalGradient(derivative8), HESSE_8, new double[]{2, 3});
-        double[] rozpoint = new double[100];
+        testFunction(func7, new NormalGradient(derivative7), HESSE_7, new double[]{2, 3});
+        /*double[] rozpoint = new double[100];
         Random r = new Random();
         for (int i = 0; i < 100; i++) {
             rozpoint[i] = r.nextFloat() % 15;
         }
-        testFunction(rozenbrok, new MarkwardtGradient(rozDerivative), rozgesse, rozpoint);
+        testFunction(rozenbrok, new MarkwardtGradient(rozDerivative), rozgesse, rozpoint);*/
     }
 
     public static class Pair {
