@@ -2,7 +2,6 @@ package fourthLab.research;
 
 import fourthLab.derivative.Gradient;
 import fourthLab.derivative.MarkwardtGradient;
-import fourthLab.derivative.NormalGradient;
 import fourthLab.hesse.Hesse;
 import fourthLab.hesse.MHesse;
 import fourthLab.method.*;
@@ -11,7 +10,6 @@ import thirdLab.exception.NoSolutionException;
 import thirdLab.matrix.Matrix;
 import thirdLab.matrix.StandardMatrix;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -128,12 +126,29 @@ public class Test {
         }
         return res;
     };
-    public static final BiFunction<Integer, double[], Double> rozDerivative = (i, v) -> switch(i) {
+
+    /*public static final BiFunction<Integer, double[], Double> rozDerivative = (i, v) -> switch(i) {
         case 0 -> 202 * v[0] - 200 * sqr(v[1]) - 2;
         case 1 -> (202 - 400 * v[0]) * v[1] + 400 * v[1] * sqr(v[1]) - 200 * sqr(v[2]) - 2;
         case 2 -> 400 * v[2] * (sqr(v[2]) - v[1]);
         default -> throw new IllegalStateException("Unexpected value: " + i);
+    };*/
+
+    /**
+     * Производная будет зависеть от длины ч
+     */
+    public static final BiFunction<Integer, double[], Double> rozDerivative = (i, x) -> {
+        if (i < 0 || i >= x.length) {
+            throw new IllegalStateException("Unexpected value: " + i);
+        }
+        if (i == 0) {
+            return -400 * x[i + 1] * x[i] + 400 * x[i] * sqr(x[i]) - 2 + 2 * x[i];
+        } else if (i == x.length - 1) {
+            return 200 * x[i] - 200 * sqr(x[i - 1]);
+        }
+        return -400 * x[i + 1] * x[i] + 400 * x[i] * sqr(x[i]) - 2 + 202 * x[i] - 200 * sqr(x[i - 1]);
     };
+
     public static final Function<double[], Double> rozdada = v -> 202d;
     public static final Function<double[], Double> rozdadb = v -> -400 * v[1];
     public static final Function<double[], Double> rozdadc = v -> 0d;
@@ -145,6 +160,33 @@ public class Test {
             List.of(rozdbdb, rozdbdc),
             List.of(rozdcdc)
     ));
+
+    /**
+     * Вместо тысячи функций
+     */
+    public static final BiFunction<Pair, double[], Double> rozdidj = (index, x) -> {
+        int i = index.i;
+        int j = index.j;
+        if (i < 0 || i >= x.length || j < 0 || j >= x.length) {
+            throw new IllegalStateException("Unexpected value: " + i);
+        }
+        double res = 0;
+        if (i == j) {
+            if (i < x.length - 1) {
+                res += -400 * x[i + 1] + 1200 * sqr(x[i]) + 2;
+            }
+            if (i > 0) {
+                res += 200;
+            }
+        } else if (j == i + 1) {
+            if (i < x.length - 1) {
+                res += -400 * x[i];
+            }
+        } else if (j == i - 1) {
+            res += -400 * x[i - 1];
+        }
+        return res;
+    };
 
     private static void testFunction(Function<double[], Double> function, Gradient gradient, Hesse H, double[] point) {
         List<NewtoneMethod> methods = List.of(
@@ -180,5 +222,14 @@ public class Test {
             rozpoint[i] = r.nextFloat() % 15;
         }
         testFunction(rozenbrok, new MarkwardtGradient(rozDerivative), rozgesse, rozpoint);
+    }
+
+    private static class Pair {
+        public final int i, j;
+
+        public Pair(int i, int j) {
+            this.i = i;
+            this.j = j;
+        }
     }
 }
