@@ -89,7 +89,7 @@ public class Functions {
             for (int j = 0; j < 5; j++) {
                 double[] temp_point = new double[]{point[0] + 5 * j, point[1] + 5 * j, point[2] + 5 * j, point[3] + 5 * j};
                 System.out.println(temp_point[0]);
-                Arrays.stream(new KvasiNewton().runPauellPrintPoints(fourderivatives.get(i), fourfunc.get(i), point));
+
                 }
             }
         }
