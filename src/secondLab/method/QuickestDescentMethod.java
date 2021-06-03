@@ -18,7 +18,7 @@ public class QuickestDescentMethod extends AbstractGradientMethod {
             double[] gradient = findGradient(point);
             double lambda = findArgMinGolden(point, gradient, function);
             nextPoint = subtract(point, multiplyValue(lambda, gradient));
-        } while (iterations < Long.MAX_VALUE && abs(nextPoint, point) >= epsilon);
+        } while (iterations < 4096 * 256 && abs(nextPoint, point) >= epsilon);
         System.out.print(iterations + " ");
         return point;
     }

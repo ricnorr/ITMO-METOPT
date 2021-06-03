@@ -1,5 +1,6 @@
 package fourthLab.method;
 
+import firstLab.method.GoldenRatioMethod;
 import fourthLab.derivative.Gradient;
 
 import java.util.Arrays;
@@ -8,8 +9,8 @@ import java.util.function.Function;
 import static java.lang.Math.sqrt;
 
 public abstract class AbstactNewtoneMethod implements NewtoneMethod {
-    protected static double EPSILON = 0.0000000001;
-    protected static int MAX_ITERATIONS = 4000;
+    protected static double EPSILON = 0.00000001;
+    protected static int MAX_ITERATIONS = 4096 * 4096;
     protected abstract double[] runImpl(Gradient gradient, Function<double[], Double> function, double[] point);
 
     @Override
@@ -187,5 +188,10 @@ public abstract class AbstactNewtoneMethod implements NewtoneMethod {
             result[i] = firstVector[i] + secondVector[i];
         }
         return result;
+    }
+
+    protected double findArgMinGolden(double[] point, double[] d, Function<double[], Double> function) {
+        return new GoldenRatioMethod(x -> function.apply(sumVectors(point, multVector(d, x))))
+                .run(0.5, 100, 0.00001);
     }
 }

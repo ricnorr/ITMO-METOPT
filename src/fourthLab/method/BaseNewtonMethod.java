@@ -23,15 +23,16 @@ public class BaseNewtonMethod extends AbstactNewtoneMethod{
                                Function<double[], Double> function,
                                double[] point) throws NoExactSolutionException, NoSolutionException {
         double[] s, x = point.clone();
+        int i = 0;
         for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
-            // s задает направление спуска (наверное)
+            i++;
             s = new thirdLab.method.GaussMethod().solve(new StandardMatrix(H.evaluate(x)), multVector(gradient.getGradient(x), -1));
-            // Сделать сумму векторов отдельно
             x = sumVectors(x, s);
             if (len(s) <= EPSILON) {
                 break;
             }
         }
+        System.out.println(i);
         return x;
     }
 }
