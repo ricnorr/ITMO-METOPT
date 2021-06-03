@@ -9,7 +9,7 @@ import static java.lang.Math.sqrt;
 
 public abstract class AbstactNewtoneMethod implements NewtoneMethod {
     protected static double EPSILON = 0.0000000001;
-    protected static int MAX_ITERATIONS = 4096;
+    protected static int MAX_ITERATIONS = 4000;
     protected abstract double[] runImpl(Gradient gradient, Function<double[], Double> function, double[] point);
 
     @Override

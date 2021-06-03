@@ -9,13 +9,16 @@ import fourthLab.method.*;
 import thirdLab.exception.NoExactSolutionException;
 import thirdLab.exception.NoSolutionException;
 import thirdLab.matrix.Matrix;
+import thirdLab.matrix.MatrixUtilities;
 import thirdLab.matrix.StandardMatrix;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Phaser;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import static thirdLab.matrix.MatrixUtilities.*;
 
 public class Test {
     //copy-pasted from secondLab.Tester
@@ -190,42 +193,93 @@ public class Test {
         return res;
     };
 
+    private static int testCount = 0;
+
+    private static double[] gen1 = new double[100];
+
+    private static boolean showRes(double[][] res) {
+        boolean f = false;
+        for (double[] r : res) {
+            if (Math.abs(1 - r[0]) < 0.001) {
+                f = true;
+                break;
+            }
+        }
+        if (f) {
+            for (double[] r : res) {
+                System.out.print(len(subtract(gen1, r)) + "; ");
+            }
+            System.out.println();
+        }
+        return f;
+    }
+
     private static void testFunction(Function<double[], Double> function, Gradient gradient, Hesse H, double[] point) {
         List<NewtoneMethod> methods = List.of(
         new Markwardt(H),
-        new KvasiNewton(),
-        new BaseNewtonMethod(H),
-        new OneDimMinNewtonMethod(H),
-        new CoolNewtonMethod(H)
+        //new KvasiNewton(),
+        //new BaseNewtonMethod(H)
+        //new OneDimMinNewtonMethod(H),
+        new CoolNewtonMethod(H),
+                new MarkwardtCholecky(H)
         );
         double[][] res = new double[methods.size()][];
+        ExecutorService solvers = Executors.newFixedThreadPool(methods.size());
+        Phaser phaser = new Phaser();
         for (int i = 0; i < methods.size(); i++) {
-            res[i] = new double[]{0};
-            try {
-                res[i] = test(methods.get(i), function, gradient, point);
-            } catch (NoSolutionException | NoExactSolutionException e) {
-                System.out.println(methods.get(i).getClass().getSimpleName() + " can't solve this");
-            }
+            final int fi = i;
+            phaser.register();
+            solvers.submit(() -> {
+                res[fi] = new double[]{0};
+                try {
+                    //System.out.println(methods.get(fi).getClass().getSimpleName() + " started");
+                    res[fi] = test(methods.get(fi), function, gradient, point);
+                } catch (NoSolutionException | NoExactSolutionException e) {
+                    System.out.println(methods.get(fi).getClass().getSimpleName() + " can't solve this");
+                }
+                //System.out.println(methods.get(fi).getClass().getSimpleName() + " finished");
+                phaser.arriveAndAwaitAdvance();
+            });
         }
-        for (int i = 0; i < res.length; i++) {
-            System.out.print(methods.get(i).getClass().getSimpleName() + ": ");
-            for (double y : res[i]) {
-                System.out.print(y + " ");
+        phaser.awaitAdvance(0);
+        solvers.shutdownNow();
+        if (showRes(res)) {
+            testCount++;
+            for (double v : point) {
+                System.out.print(v + " ");
             }
             System.out.println();
+            for (int i = 0; i < res.length; i++) {
+                System.out.print(methods.get(i).getClass().getSimpleName() + ": ");
+                for (double y : res[i]) {
+                    System.out.print(y + " ");
+                }
+                System.out.println();
+            }
+            System.out.println("--------------------------------------------------------");
         }
     }
     public static void main(String[] args) {
         //testFunction(func4, new NormalGradient(derivative4bf), HESSE_4, new double[]{2, 3});
         //testFunction(func8, new NormalGradient(derivative8), HESSE_8, new double[]{2, 3});
-        testFunction(func7, new NormalGradient(derivative7), HESSE_7, new double[]{2, 3});
-        /*double[] rozpoint = new double[100];
-        Random r = new Random();
-        for (int i = 0; i < 100; i++) {
-            rozpoint[i] = r.nextFloat() % 15;
+        //testFunction(func7, new NormalGradient(derivative7), HESSE_7, new double[]{2, 3});
+        Arrays.fill(gen1, 1);
+        for (int jjj = 0; jjj < 100; jjj++) {
+            double[] rozpoint = new double[100];
+            Scanner in = new Scanner(System.in);
+            Random r = new Random();
+            for (int i = 0; i < 100; i++) {
+                //rozpoint[i] = r.nextFloat() * r.nextInt(100);
+                //rozpoint[i] = in.nextDouble();
+                rozpoint[i] = r.nextInt(4);
+                //System.out.print(rozpoint[i] + " ");
+            }
+            //System.out.println();
+            testFunction(rozenbrok, new MarkwardtGradient(rozDerivative), rozgesse, rozpoint);
         }
-        testFunction(rozenbrok, new MarkwardtGradient(rozDerivative), rozgesse, rozpoint);*/
+        System.out.println(testCount);
     }
+
 
     public static class Pair {
         public final int i, j;
