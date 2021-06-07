@@ -9,10 +9,10 @@ import java.util.function.Function;
 
 import static thirdLab.matrix.MatrixUtilities.len;
 
-public class CoolNewtonMethod extends AbstactNewtoneMethod{
+public class DirectionNewtonMethod extends AbstactNewtoneMethod{
     private final Hesse H;
 
-    public CoolNewtonMethod(Hesse H) {
+    public DirectionNewtonMethod(Hesse H) {
         this.H = H;
     }
 
@@ -24,7 +24,7 @@ public class CoolNewtonMethod extends AbstactNewtoneMethod{
         s = multVector(d, findArgMinGolden(x, d, function));
         x = sumVectors(x, s);*/
         int i = 0;
-        //System.out.println(x[0] + " " + x[1]);
+        System.out.println(x[0] + " " + x[1]);
         for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
             i++;
             double[] grad = gradient.getGradient(x);
